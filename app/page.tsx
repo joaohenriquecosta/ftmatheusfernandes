@@ -1,65 +1,104 @@
-import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Matheus Fernandes — Fisioterapeuta Esportivo",
+  description:
+    "Fisioterapeuta esportivo. Terapias manuais modernas, raciocínio clínico baseado em evidência. CREFITO 3/321383-F.",
+  openGraph: {
+    title: "Matheus Fernandes — Fisioterapeuta Esportivo",
+    description:
+      "Fisioterapeuta esportivo. Terapias manuais modernas, raciocínio clínico baseado em evidência.",
+    type: "website",
+    locale: "pt_BR",
+  },
+};
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="relative min-h-screen overflow-hidden bg-[#FAF7F1] text-[#1A1F1B] antialiased">
+      {/* Subtle grain texture */}
+      <div
+        className="pointer-events-none fixed inset-0 z-1 opacity-5"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
+      {/* Top accent line */}
+      <div className="absolute inset-x-0 top-0 z-10 h-0.5 bg-[#1F4A33]" />
+
+      <div className="relative z-2 mx-auto flex min-h-screen max-w-[880px] flex-col px-6 md:px-12">
+        {/* Header */}
+        <header className="flex items-start justify-between pt-12 text-[11px] font-medium tracking-[0.18em] text-[#4A524C] uppercase md:pt-16">
+          <div>Matheus Fernandes</div>
+          <div className="text-right">
+            <div>CREFITO 3/321383-F</div>
+            <div className="mt-1">São Carlos · SP</div>
+          </div>
+        </header>
+
+        {/* Center content */}
+        <div className="flex flex-1 flex-col justify-center py-20">
+          {/* Eyebrow */}
+          <div className="mb-8 inline-flex items-center gap-3.5 text-[11px] font-semibold tracking-[0.3em] text-[#E89B3C] uppercase">
+            <span className="h-px w-8 bg-[#E89B3C]" />
+            <span>Em breve</span>
+          </div>
+
+          {/* Title */}
+          <h1
+            className="mb-8 text-[clamp(44px,7vw,88px)] leading-[1.02] tracking-[-0.02em] text-[#1F4A33]"
+            style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
+          >
+            Fisioterapia esportiva,{" "}
+            <em className="font-light text-[#E89B3C] italic">
+              raciocínio clínico,
+            </em>{" "}
+            terapia manual.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          {/* Sub */}
+          <p
+            className="max-w-[540px] text-[19px] leading-[1.55] font-light text-[#4A524C]"
+            style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
+          >
+            Atendimento presencial, cursos de formação e conteúdo técnico
+            baseado em evidência. Site em construção — em breve, novidades.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+
+        {/* Bottom */}
+        <footer className="flex flex-col items-start justify-between gap-4 border-t border-[#1F4A33]/10 pt-7 pb-10 md:flex-row md:items-end md:gap-10 md:pb-14">
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href="https://www.instagram.com/ft.matheusfernandes/"
             target="_blank"
             rel="noopener noreferrer"
+            className="group inline-flex items-center gap-3 text-[11px] font-semibold tracking-[0.2em] text-[#1F4A33] uppercase transition-colors hover:text-[#E89B3C]"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
+            <span>Instagram · @ft.matheusfernandes</span>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="transition-transform group-hover:translate-x-1"
+            >
+              <path
+                d="M3 7H11M11 7L7 3M11 7L7 11"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+          <div className="text-left text-[11px] tracking-[0.2em] text-[#4A524C] uppercase md:text-right">
+            <div>© 2026 Matheus Fernandes</div>
+            <div className="mt-1">Todos os direitos reservados</div>
+          </div>
+        </footer>
+      </div>
+    </main>
   );
 }

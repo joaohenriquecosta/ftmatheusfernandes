@@ -1,0 +1,1317 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/icon.png" type="image/png" />
+    <title>
+      Proposta — Infraestrutura de Vendas · Terapias Manuais Modernas
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --green-deep: #1f4a33;
+        --green-mid: #2d5f3f;
+        --green-soft: #b8cdb4;
+        --green-mist: #e8efe6;
+        --orange: #e89b3c;
+        --orange-soft: #f4c690;
+        --cream: #faf7f1;
+        --paper: #f5f1e8;
+        --ink: #1a1f1b;
+        --ink-soft: #4a524c;
+        --line: rgba(31, 74, 51, 0.12);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--cream);
+        color: var(--ink);
+        line-height: 1.6;
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      ::selection {
+        background: var(--orange);
+        color: var(--cream);
+      }
+
+      .grain {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      .container {
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 0 48px;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* ---------- HERO ---------- */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 64px 0 72px;
+        position: relative;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--green-deep);
+      }
+
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        font-weight: 500;
+      }
+
+      .hero-top .meta-block {
+        text-align: right;
+      }
+      .hero-top .meta-block span {
+        display: block;
+      }
+
+      .hero-center {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 80px 0;
+      }
+
+      .eyebrow {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--orange);
+        font-weight: 600;
+        margin-bottom: 32px;
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        animation: fadeUp 0.8s ease 0.2s both;
+      }
+      .eyebrow::before {
+        content: "";
+        width: 32px;
+        height: 1px;
+        background: var(--orange);
+      }
+
+      .hero-title {
+        font-family: "Fraunces", serif;
+        font-weight: 400;
+        font-size: clamp(44px, 7vw, 88px);
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+        color: var(--green-deep);
+        margin-bottom: 32px;
+        animation: fadeUp 0.9s ease 0.4s both;
+      }
+
+      .hero-title em {
+        font-style: italic;
+        font-weight: 300;
+        color: var(--orange);
+        font-variation-settings: "opsz" 144;
+      }
+
+      .hero-sub {
+        font-family: "Fraunces", serif;
+        font-size: 19px;
+        font-weight: 300;
+        line-height: 1.55;
+        color: var(--ink-soft);
+        max-width: 540px;
+        animation: fadeUp 0.9s ease 0.6s both;
+      }
+
+      .hero-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 40px;
+        border-top: 1px solid var(--line);
+        padding-top: 28px;
+        animation: fadeUp 0.9s ease 0.8s both;
+      }
+
+      .hero-bottom-left {
+        font-family: "Fraunces", serif;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--ink-soft);
+        max-width: 380px;
+      }
+      .hero-bottom-left strong {
+        color: var(--green-deep);
+        font-weight: 500;
+      }
+
+      .hero-bottom-right {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        text-align: right;
+      }
+
+      /* ---------- SECTIONS ---------- */
+      section {
+        padding: 100px 0;
+        position: relative;
+      }
+
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 36px;
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--orange);
+        font-weight: 600;
+      }
+      .section-label .num {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 28px;
+        color: var(--green-deep);
+        letter-spacing: 0;
+        text-transform: none;
+        line-height: 1;
+      }
+      .section-label .line {
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
+
+      .section-title {
+        font-family: "Fraunces", serif;
+        font-weight: 400;
+        font-size: clamp(32px, 4.5vw, 48px);
+        line-height: 1.1;
+        letter-spacing: -0.015em;
+        color: var(--green-deep);
+        margin-bottom: 28px;
+        max-width: 720px;
+      }
+
+      .section-title em {
+        font-style: italic;
+        font-weight: 300;
+        color: var(--orange);
+      }
+
+      .lead {
+        font-family: "Fraunces", serif;
+        font-size: 21px;
+        font-weight: 300;
+        line-height: 1.55;
+        color: var(--ink);
+        max-width: 660px;
+        margin-bottom: 24px;
+      }
+
+      p {
+        font-size: 16px;
+        line-height: 1.75;
+        color: var(--ink-soft);
+        max-width: 660px;
+        margin-bottom: 18px;
+      }
+      p strong {
+        color: var(--green-deep);
+        font-weight: 600;
+      }
+
+      .divider-soft {
+        height: 1px;
+        background: var(--line);
+        margin: 0 0;
+      }
+
+      /* ---------- RECONHECIMENTO ---------- */
+      .quote-block {
+        margin-top: 32px;
+        padding: 36px 40px;
+        background: var(--green-mist);
+        border-left: 3px solid var(--orange);
+        position: relative;
+      }
+      .quote-block .mark {
+        font-family: "Fraunces", serif;
+        font-size: 64px;
+        line-height: 0.4;
+        color: var(--orange);
+        position: absolute;
+        top: 32px;
+        left: 40px;
+        font-style: italic;
+      }
+      .quote-block p {
+        font-family: "Fraunces", serif;
+        font-size: 19px;
+        font-style: italic;
+        font-weight: 300;
+        line-height: 1.55;
+        color: var(--green-deep);
+        padding-left: 28px;
+        max-width: none;
+        margin: 0;
+      }
+
+      /* ---------- POR QUE ---------- */
+      .three-cols {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0;
+        margin-top: 48px;
+        border-top: 1px solid var(--line);
+      }
+      .col {
+        padding: 32px 28px 32px 0;
+        border-right: 1px solid var(--line);
+      }
+      .col:last-child {
+        border-right: none;
+        padding-right: 0;
+      }
+      .col:nth-child(n + 2) {
+        padding-left: 28px;
+      }
+
+      .col-num {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 36px;
+        color: var(--orange);
+        line-height: 1;
+        margin-bottom: 20px;
+      }
+      .col h4 {
+        font-family: "Fraunces", serif;
+        font-weight: 500;
+        font-size: 18px;
+        color: var(--green-deep);
+        margin-bottom: 12px;
+        line-height: 1.3;
+      }
+      .col p {
+        font-size: 14px;
+        line-height: 1.65;
+        margin: 0;
+      }
+
+      /* ---------- ESCOPO ---------- */
+      .scope-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin-top: 40px;
+        border-top: 1px solid var(--green-deep);
+      }
+
+      /* ---------- TEAM GRID ---------- */
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0;
+        margin-top: 48px;
+        border-top: 1px solid var(--line);
+        border-left: 1px solid var(--line);
+      }
+      .team-card {
+        padding: 32px 28px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        transition: background 0.3s ease;
+      }
+      .team-card:hover {
+        background: rgba(232, 155, 60, 0.04);
+      }
+      .team-role {
+        font-family: "Inter", sans-serif;
+        font-size: 10px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--orange);
+        font-weight: 600;
+        margin-bottom: 14px;
+      }
+      .team-card h4 {
+        font-family: "Fraunces", serif;
+        font-weight: 500;
+        font-size: 24px;
+        color: var(--green-deep);
+        margin-bottom: 12px;
+        line-height: 1.2;
+      }
+      .team-card p {
+        font-size: 14px;
+        line-height: 1.65;
+        margin: 0;
+        color: var(--ink-soft);
+      }
+
+      .scope-row {
+        display: grid;
+        grid-template-columns: 60px 1fr 2fr;
+        gap: 32px;
+        padding: 28px 0;
+        border-bottom: 1px solid var(--line);
+        align-items: baseline;
+        transition: background 0.3s ease;
+      }
+      .scope-row:hover {
+        background: rgba(232, 155, 60, 0.04);
+      }
+
+      .scope-num {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 22px;
+        color: var(--orange);
+      }
+      .scope-name {
+        font-family: "Fraunces", serif;
+        font-weight: 500;
+        font-size: 19px;
+        color: var(--green-deep);
+        line-height: 1.3;
+      }
+      .scope-desc {
+        font-size: 14px;
+        line-height: 1.65;
+        color: var(--ink-soft);
+        margin: 0;
+      }
+
+      /* ---------- FORA DE ESCOPO ---------- */
+      .out-block {
+        margin-top: 48px;
+        padding: 36px 40px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+      }
+      .out-block h4 {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .out-block ul {
+        list-style: none;
+        columns: 2;
+        column-gap: 32px;
+      }
+      .out-block li {
+        font-family: "Fraunces", serif;
+        font-size: 15px;
+        color: var(--ink-soft);
+        padding: 6px 0;
+        break-inside: avoid;
+      }
+      .out-block li::before {
+        content: "—";
+        color: var(--orange);
+        margin-right: 10px;
+      }
+
+      /* ---------- KURIRIM ---------- */
+      .kuririm-block {
+        background: var(--green-deep);
+        color: var(--cream);
+        padding: 56px 48px;
+        margin-top: 32px;
+        position: relative;
+        overflow: hidden;
+      }
+      .kuririm-block::before {
+        content: "";
+        position: absolute;
+        right: -40px;
+        top: -40px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, var(--orange) 0%, transparent 70%);
+        opacity: 0.15;
+      }
+      .kuririm-block .label {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--orange-soft);
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .kuririm-block h3 {
+        font-family: "Fraunces", serif;
+        font-weight: 400;
+        font-size: 32px;
+        color: var(--cream);
+        line-height: 1.2;
+        margin-bottom: 20px;
+      }
+      .kuririm-block h3 em {
+        color: var(--orange-soft);
+        font-style: italic;
+        font-weight: 300;
+      }
+      .kuririm-block p {
+        color: rgba(250, 247, 241, 0.8);
+        font-size: 16px;
+        max-width: 620px;
+        margin-bottom: 16px;
+      }
+      .kuririm-block p strong {
+        color: var(--cream);
+      }
+
+      /* ---------- INVESTIMENTO ---------- */
+      .invest-card {
+        margin-top: 40px;
+        padding: 0;
+        border: 1px solid var(--green-deep);
+        overflow: hidden;
+      }
+      .invest-header {
+        background: var(--green-deep);
+        color: var(--cream);
+        padding: 24px 36px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .invest-header .label {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .invest-header .scope-tag {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-size: 14px;
+        color: var(--orange-soft);
+        font-weight: 300;
+      }
+
+      .invest-body {
+        padding: 48px 36px;
+        background: var(--cream);
+        display: grid;
+        grid-template-columns: 1fr 1px 1fr;
+        gap: 40px;
+        align-items: center;
+      }
+      .invest-divider {
+        background: var(--line);
+        height: 80%;
+        align-self: center;
+      }
+
+      .invest-price {
+        font-family: "Fraunces", serif;
+        font-weight: 300;
+        font-size: 64px;
+        line-height: 1;
+        color: var(--green-deep);
+        letter-spacing: -0.02em;
+      }
+      .invest-price small {
+        font-size: 22px;
+        color: var(--orange);
+        font-style: italic;
+        margin-right: 6px;
+        vertical-align: top;
+        position: relative;
+        top: 12px;
+      }
+      .invest-caption {
+        font-size: 13px;
+        color: var(--ink-soft);
+        margin-top: 12px;
+        line-height: 1.5;
+        max-width: none;
+      }
+
+      .invest-terms {
+        font-family: "Fraunces", serif;
+        font-size: 15px;
+        line-height: 1.7;
+        color: var(--ink);
+      }
+      .invest-terms strong {
+        color: var(--green-deep);
+      }
+      .invest-terms .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px dashed var(--line);
+      }
+      .invest-terms .row:last-child {
+        border-bottom: none;
+      }
+      .invest-terms .row span:first-child {
+        color: var(--ink-soft);
+        font-size: 13px;
+        font-family: "Inter", sans-serif;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      /* ---------- CONSELHO DE AMIGO ---------- */
+      .friend-note {
+        margin-top: 56px;
+        padding: 48px 0;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        position: relative;
+      }
+      .friend-note::before {
+        content: "Conselho de amigo";
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 13px;
+        color: var(--orange);
+        background: var(--cream);
+        padding: 0 16px;
+        position: absolute;
+        top: -10px;
+        left: 0;
+      }
+      .friend-note h3 {
+        font-family: "Fraunces", serif;
+        font-weight: 500;
+        font-size: 22px;
+        color: var(--green-deep);
+        margin-bottom: 16px;
+        margin-top: 8px;
+      }
+
+      /* ---------- FUTURO ---------- */
+      .future-block {
+        margin-top: 48px;
+        padding: 56px 48px;
+        background: var(--green-mist);
+        position: relative;
+      }
+      .future-block .seed {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--orange);
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .future-block h3 {
+        font-family: "Fraunces", serif;
+        font-weight: 400;
+        font-size: 28px;
+        line-height: 1.25;
+        color: var(--green-deep);
+        margin-bottom: 20px;
+        max-width: 640px;
+      }
+      .future-block h3 em {
+        font-style: italic;
+        color: var(--orange);
+        font-weight: 300;
+      }
+      .future-block p {
+        color: var(--ink);
+        font-size: 15px;
+        max-width: 600px;
+      }
+
+      /* ---------- FECHAMENTO ---------- */
+      .closing {
+        padding: 120px 0 100px;
+        text-align: center;
+      }
+      .closing .small {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--orange);
+        font-weight: 600;
+        margin-bottom: 28px;
+      }
+      .closing h2 {
+        font-family: "Fraunces", serif;
+        font-weight: 300;
+        font-size: clamp(36px, 5vw, 56px);
+        line-height: 1.15;
+        color: var(--green-deep);
+        letter-spacing: -0.02em;
+        margin-bottom: 24px;
+      }
+      .closing h2 em {
+        font-style: italic;
+        color: var(--orange);
+      }
+      .closing .signature {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 18px;
+        color: var(--ink-soft);
+        margin-top: 56px;
+      }
+      .closing .crefito {
+        font-family: "Inter", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin-top: 8px;
+      }
+      .cta-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 32px;
+        background: var(--green-deep);
+        color: var(--cream);
+        text-decoration: none;
+        font-family: "Inter", sans-serif;
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-weight: 600;
+        border: 1px solid var(--green-deep);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-link::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--orange);
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+        z-index: 0;
+      }
+      .cta-link span,
+      .cta-link svg {
+        position: relative;
+        z-index: 1;
+        transition: transform 0.3s ease;
+      }
+      .cta-link:hover::before {
+        transform: translateY(0);
+      }
+      .cta-link:hover {
+        border-color: var(--orange);
+      }
+      .cta-link:hover svg {
+        transform: translateX(4px);
+      }
+
+      /* ---------- ANIMS ---------- */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ---------- RESPONSIVE ---------- */
+      @media (max-width: 720px) {
+        .container {
+          padding: 0 24px;
+        }
+        section {
+          padding: 64px 0;
+        }
+        .hero {
+          padding: 40px 0 48px;
+        }
+        .hero-bottom {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .hero-bottom-right {
+          text-align: left;
+        }
+        .three-cols {
+          grid-template-columns: 1fr;
+        }
+        .col {
+          border-right: none;
+          border-bottom: 1px solid var(--line);
+          padding: 28px 0 !important;
+        }
+        .col:last-child {
+          border-bottom: none;
+        }
+        .team-grid {
+          grid-template-columns: 1fr;
+          border-left: none;
+        }
+        .team-card {
+          border-right: none;
+          padding: 28px 0;
+        }
+        .scope-row {
+          grid-template-columns: 1fr;
+          gap: 8px;
+          padding: 24px 0;
+        }
+        .out-block ul {
+          columns: 1;
+        }
+        .out-block,
+        .kuririm-block,
+        .future-block {
+          padding: 32px 24px;
+        }
+        .invest-body {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+        .invest-divider {
+          display: none;
+        }
+        .invest-price {
+          font-size: 48px;
+        }
+      }
+
+      @media print {
+        body {
+          background: white;
+        }
+        .grain {
+          display: none;
+        }
+        section {
+          padding: 40px 0;
+          page-break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain"></div>
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="container">
+        <div class="hero-top">
+          <div>Proposta · Maio 2026</div>
+          <div class="meta-block">
+            <span>Para Matheus Fernandes</span>
+            <span>De Palinha</span>
+          </div>
+        </div>
+
+        <div class="hero-center">
+          <div class="eyebrow">Infraestrutura de vendas</div>
+          <h1 class="hero-title">
+            Terapias Manuais<br />Modernas, <em>online.</em>
+          </h1>
+          <p class="hero-sub">
+            Uma proposta honesta sobre como posso contribuir com o lançamento da
+            turma de São Carlos — e onde nossa parceria pode ir depois disso.
+          </p>
+        </div>
+
+        <div class="hero-bottom">
+          <div class="hero-bottom-left">
+            <strong>Sobre este documento.</strong> Não é um orçamento padrão. É
+            uma reflexão sobre o que faz sentido pros dois lados, escrita com a
+            clareza que uma amizade próxima merece.
+          </div>
+          <div class="hero-bottom-right">
+            <div>São Carlos · SP</div>
+            <div>Turma 2 · Junho 2026</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 01 — RECONHECIMENTO -->
+    <section class="reveal">
+      <div class="container">
+        <div class="section-label">
+          <span class="num">01</span> Antes de tudo <span class="line"></span>
+        </div>
+        <h2 class="section-title">
+          Você está construindo algo <em>sério.</em>
+        </h2>
+        <p class="lead">
+          Olhei o material do curso com calma. Não é um workshop genérico — é
+          conteúdo de pós, com referências (Hegedus, Vicenzino, May & Cina,
+          Shacklock) e raciocínio clínico estruturado. As 14 vendas para
+          Uberaba, todas por Pix, antes de existir qualquer infraestrutura
+          digital, dizem o resto.
+        </p>
+        <p>
+          O que você está vendendo é a sua reputação como fisioterapeuta
+          esportivo. A infraestrutura entra depois — pra
+          <strong>amplificar o que já funciona</strong>, não pra suprir o que
+          falta.
+        </p>
+
+        <div class="quote-block">
+          <span class="mark">“</span>
+          <p>
+            Por isso quero responder seu convite com cuidado. Tem caminhos
+            diferentes pra eu ajudar, e nem todos são bons pra nós dois.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 — POR QUE NÃO SOCIEDADE -->
+    <section style="background: var(--paper)" class="reveal">
+      <div class="container">
+        <div class="section-label">
+          <span class="num">02</span> A proposta de 60/40
+          <span class="line"></span>
+        </div>
+        <h2 class="section-title">
+          Não consigo entrar como sócio <em>nessa turma.</em>
+        </h2>
+        <p class="lead">
+          Pensei muito antes de escrever isso. A resposta honesta é que o modelo
+          de revenue share funciona bem em alguns contextos — e esse não é um
+          deles. Três motivos:
+        </p>
+
+        <div class="three-cols">
+          <div class="col">
+            <div class="col-num">i.</div>
+            <h4>Eu trabalho full-time em outra área</h4>
+            <p>
+              Não vou ter banda pra entender mercado de fisio, ajustar oferta,
+              gerenciar aluno, responder dúvida. Esse trabalho é seu — e tem que
+              continuar sendo.
+            </p>
+          </div>
+          <div class="col">
+            <div class="col-num">ii.</div>
+            <h4>O risco fica todo do meu lado</h4>
+            <p>
+              No 60/40 com a verba de ads saindo do meu 40%, eu banco o
+              marketing inteiro. Se a turma vende metade, eu saio no zero. Não
+              dá pra assumir isso em algo que não controlo.
+            </p>
+          </div>
+          <div class="col">
+            <div class="col-num">iii.</div>
+            <h4>Clareza acima de tudo</h4>
+            <p>
+              Entre amigos, escopo fechado e preço definido funciona melhor do
+              que variável. Cada um sabe exatamente o que está entregando e o
+              que está recebendo — e sobra energia pra focar no projeto, não no
+              cálculo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 — O QUE EU ENTREGO -->
+    <section class="reveal">
+      <div class="container">
+        <div class="section-label">
+          <span class="num">03</span> O que eu entrego
+          <span class="line"></span>
+        </div>
+        <h2 class="section-title">
+          Trabalho técnico, escopo fechado, <em>preço justo.</em>
+        </h2>
+        <p class="lead">
+          A entrega é a infraestrutura digital de vendas: o site onde as pessoas
+          chegam, o checkout onde compram, e a medição que conta de onde veio
+          cada venda.
+        </p>
+
+        <div class="scope-grid">
+          <div class="scope-row">
+            <div class="scope-num">i.</div>
+            <div class="scope-name">Landing page Next.js</div>
+            <p class="scope-desc">
+              Página de conversão, mobile-first, performance &gt; 90 no
+              Lighthouse, hospedada na Vercel com domínio próprio. Estrutura
+              editorial: headline, prova social, programação dos 4 módulos,
+              sobre você, FAQ, CTA pro checkout.
+            </p>
+          </div>
+          <div class="scope-row">
+            <div class="scope-num">ii.</div>
+            <div class="scope-name">Integração de checkout</div>
+            <p class="scope-desc">
+              Botão da landing leva direto pro Mercado Pago ou InfinitePay
+              (escolho a melhor taxa de Pix + cartão parcelado). Página de
+              obrigado pós-pagamento com instruções e link do grupo de WhatsApp.
+            </p>
+          </div>
+          <div class="scope-row">
+            <div class="scope-num">iii.</div>
+            <div class="scope-name">Tracking completo</div>
+            <p class="scope-desc">
+              GA4, Meta Pixel + Conversions API (server-side, não morre com
+              iOS), TikTok Pixel + Events API, Google Ads tag. Eventos:
+              visualização, clique no CTA, início de checkout, compra. UTMs
+              padronizados.
+            </p>
+          </div>
+          <div class="scope-row">
+            <div class="scope-num">iv.</div>
+            <div class="scope-name">Documentação e handoff</div>
+            <p class="scope-desc">
+              Tudo documentado pra você (ou qualquer profissional que entre
+              depois) entender. Acessos das contas no seu nome — você é dono dos
+              dados, do pixel, do domínio. Não fica preso a mim.
+            </p>
+          </div>
+        </div>
+
+        <div class="out-block">
+          <h4>O que <em>não</em> entra nesse escopo</h4>
+          <ul>
+            <li>Operação contínua dos ads</li>
+            <li>Criação de criativos (Reels, fotos)</li>
+            <li>Copywriting profundo da página</li>
+            <li>Suporte ao aluno e gestão da turma</li>
+            <li>Logística do evento presencial</li>
+            <li>Emissão de NF e questões fiscais</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 — KURIRIM -->
+    <section style="background: var(--paper)" class="reveal">
+      <div class="container">
+        <div class="section-label">
+          <span class="num">04</span> Sobre os anúncios pagos
+          <span class="line"></span>
+        </div>
+        <h2 class="section-title">Quem opera os ads não <em>sou eu.</em></h2>
+        <p class="lead">
+          A operação diária de campanhas Meta, Google e TikTok exige presença
+          diária — e isso não cabe na minha rotina atual. Mas tenho uma
+          indicação que pode resolver isso bem.
+        </p>
+
+        <div class="kuririm-block">
+          <div class="label">Recomendação · Trabalho independente</div>
+          <h3>O Kuririm pode rodar as campanhas <em>direto contigo.</em></h3>
+          <p>
+            Ele tem interesse em entrar nesse mundo de gestão de tráfego, e eu
+            posso orientar tecnicamente nos bastidores — como camaradagem, sem
+            cobrar e sem entrar no contrato.
+          </p>
+          <p>
+            <strong>O combinado fica entre vocês dois.</strong> Ele cota o
+            serviço, define escopo, recebe diretamente. Eu não intermedio
+            pagamento nem assumo responsabilidade pelo trabalho dele — só ajudo
+            informalmente quando precisar.
+          </p>
+          <p>
+            Se preferir contratar um gestor de tráfego mais experiente no
+            mercado, sem problema. A infraestrutura que eu entrego funciona com
+            qualquer profissional.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 — O TIME -->
+    <section class="reveal">
+      <div class="container">
+        <div class="section-label">
+          <span class="num">05</span> O time <span class="line"></span>
+        </div>
+        <h2 class="section-title">
+          Quatro pessoas pra <em>fazer acontecer.</em>
+        </h2>
+        <p class="lead">
+          Vale mapear o quadro completo. Ajuda a enxergar quem faz o quê e onde
+          estão os pontos de contato — sem entrar em mérito de combinados, que
+          ficam entre você e cada um.
+        </p>
+
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-role">Conteúdo &amp; entrega</div>
+            <h4>Matheus</h4>
+            <p>
+              Define o produto, ensina o curso, atende o aluno. É o rosto e a
+              reputação do projeto — tudo se apoia nisso.
+            </p>
+          </div>
+          <div class="team-card">
+            <div class="team-role">Infraestrutura digital</div>
+            <h4>Palinha</h4>
+            <p>
+              Site, checkout, tracking. Entrega o que está nesta proposta e
+              supervisiona tecnicamente o Kuririm de forma informal.
+            </p>
+          </div>
+          <div class="team-card">
+            <div class="team-role">Mídia paga</div>
+            <h4>Kuririm</h4>
+            <p>
+              Operação diária dos ads em Meta, Google e TikTok. Combinado direto
+              com o Matheus, fora do escopo desta proposta.
+            </p>
+          </div>
+          <div class="team-card">
+            <div class="team-role">Design &amp; criativos</div>
+            <h4>Larissa</h4>
+            <p>
+              Já produz materiais visuais no Canva. Os criativos que ela cria
+              são insumo direto do que o Kuririm vai rodar nos ads.
+            </p>
+          </div>
+        </div>
+
+        <p
+          style="
+            margin-top: 32px;
+            font-style: italic;
+            font-family: &quot;Fraunces&quot;, serif;
+            font-size: 16px;
+          "
+        >
+          A proposta nesta página cobre apenas a parte do Palinha. As outras
+          peças do time são mencionadas para contexto.
+        </p>
+      </div>
+    </section>
+
+    <!-- 06 — INVESTIMENTO -->
+    <section class="reveal">
+      <div class="container">
+        <div class="section-label">
+          <span class="num">06</span> Investimento <span class="line"></span>
+        </div>
+        <h2 class="section-title">
+          Um valor simbólico, <em>com intenção.</em>
+        </h2>
+        <p class="lead">
+          Cobrei abaixo do mercado de propósito. Esse projeto entra como case no
+          meu portfólio, e a contrapartida natural é um preço de amigo. Sem
+          ressentimento, sem favor mal resolvido — só clareza.
+        </p>
+
+        <div class="invest-card">
+          <div class="invest-header">
+            <span class="label">Escopo fechado</span>
+            <span class="scope-tag"
+              >Landing · Checkout · Tracking · Handoff</span
+            >
+          </div>
+          <div class="invest-body">
+            <div>
+              <div class="invest-price"><small>R$</small>2.000</div>
+              <p class="invest-caption">
+                Mercado cobraria entre R$4.000 e R$8.500 por esse mesmo escopo.
+                O desconto é deliberado — você ganha por ser amigo, eu ganho por
+                ter o projeto no portfólio.
+              </p>
+            </div>
+            <div class="invest-divider"></div>
+            <div class="invest-terms">
+              <div class="row">
+                <span>Prazo</span><strong>2 semanas</strong>
+              </div>
+              <div class="row">
+                <span>Início</span><strong>50% à vista</strong>
+              </div>
+              <div class="row">
+                <span>Entrega</span><strong>50% no go-live</strong>
+              </div>
+              <div class="row">
+                <span>Verba de ads</span><strong>Por sua conta</strong>
+              </div>
+              <div class="row">
+                <span>Operação dos ads</span><strong>Kuririm (à parte)</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conselho de amigo -->
+        <div class="friend-note">
+          <h3>Sobre o ticket do curso</h3>
+          <p>
+            Olhando o conteúdo dos 4 módulos, R$300 é barato pro nível técnico
+            do material. Conteúdo equivalente roda no mercado entre R$497 e
+            R$697 quando presencial com prática. Subir o ticket muda diretamente
+            a viabilidade dos ads (CAC absorve melhor) e a percepção de valor do
+            curso. Vale testar na turma 2.
+          </p>
+          <p>
+            Esse comentário não tem custo nem entra na proposta. Só dado de
+            mercado pra você considerar.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 — FUTURO -->
+    <section class="reveal">
+      <div class="container">
+        <div class="section-label">
+          <span class="num">07</span> O que pode vir depois
+          <span class="line"></span>
+        </div>
+
+        <div class="future-block">
+          <div class="seed">Conversa pra daqui 60 a 90 dias</div>
+          <h3>
+            Existe um caminho onde <em>sociedade</em> faz total sentido — e não
+            é a turma presencial.
+          </h3>
+          <p>
+            Seu material dos 4 módulos é matéria-prima pra um curso online
+            próprio: gravado, plataforma sua (não Hotmart), área do aluno,
+            acesso vitalício, certificado, controle total dos dados. Você grava,
+            eu construo a plataforma, dividimos a receita.
+          </p>
+          <p>
+            Aí faz sentido revenue share — porque eu construo um ativo que
+            escala e roda todo mês, não uma turma específica. Mas isso é
+            conversa pra ter
+            <strong>depois da turma de São Carlos acontecer</strong>, com dados
+            reais sobre venda, capacidade do time e o que funcionou ou não. Não
+            agora.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FECHAMENTO -->
+    <footer class="closing reveal">
+      <div class="container">
+        <div class="small">Próximo passo</div>
+        <h2>Vamos conversar?<br />Marca <em>15 minutos</em> comigo.</h2>
+        <p style="margin: 0 auto 36px">
+          Pra alinhar dúvidas, ajustar o que precisar, e — se fizer sentido pros
+          dois — fechar nessa semana pra começar segunda.
+        </p>
+        <a
+          href="https://cal.com/joaohenriquecosta"
+          class="cta-link"
+          target="_blank"
+          rel="noopener"
+        >
+          <span>Agendar 15 minutos</span>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 7H11M11 7L7 3M11 7L7 11"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </a>
+        <div class="signature">— Palinha</div>
+        <div class="crefito">Maio 2026</div>
+      </div>
+    </footer>
+
+    <script>
+      // Reveal on scroll
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
