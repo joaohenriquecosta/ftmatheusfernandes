@@ -65,6 +65,47 @@ export default function Home() {
             Atendimento presencial, cursos de formação e conteúdo técnico
             baseado em evidência. Site em construção — em breve, novidades.
           </p>
+
+          {/* Formação */}
+          <div className="mt-16 grid gap-8 border-t border-[#1F4A33]/10 pt-10 md:mt-20 md:grid-cols-[160px_1fr] md:gap-14">
+            <div className="text-[11px] font-semibold tracking-[0.3em] text-[#1F4A33] uppercase">
+              Formação
+            </div>
+            <div
+              className="space-y-8 text-[16px] leading-[1.6] font-light text-[#4A524C]"
+              style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
+            >
+              <p>Formação 2020.</p>
+
+              <div>
+                <div
+                  className="mb-3 text-[11px] font-semibold tracking-[0.3em] text-[#4A524C] uppercase"
+                  style={{ fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}
+                >
+                  Formação complementar
+                </div>
+                <ul className="space-y-3">
+                  <li>
+                    Pós-graduado em Fisioterapia Traumato-Ortopédica com ênfase
+                    em Terapia Manual{" "}
+                    <span className="text-[#1F4A33]/70">— Barão de Mauá</span>
+                  </li>
+                  <li>
+                    Pós-graduado em Fisioterapia Esportiva{" "}
+                    <span className="text-[#1F4A33]/70">— CETE / UNIFESP</span>
+                  </li>
+                  <li>
+                    Pós-graduando em Ciência do Treinamento de Força{" "}
+                    <span className="text-[#1F4A33]/70">
+                      — Musculab / UFSCAR
+                    </span>
+                  </li>
+                  <li>Certificado em Quiropraxia Clínica.</li>
+                  <li>Certificado em Dinamometria Manual Isométrica.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Bottom */}
