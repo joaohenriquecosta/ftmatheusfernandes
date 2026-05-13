@@ -41,6 +41,11 @@ body {
   }
 }
 
+/* Smooth scroll global pra navegação por âncoras (#hash) ficar fluida. */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Terminal cursor blink (hard step, not fade). */
 @keyframes terminalBlink {
   0%,

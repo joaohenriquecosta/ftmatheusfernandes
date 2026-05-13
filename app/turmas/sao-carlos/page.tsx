@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { DevCredit } from "@/components/dev-credit";
 import { ArrowRight } from "@/components/icons";
+import { SmoothScrollOnHash } from "@/components/smooth-scroll-on-hash";
 
 export const metadata: Metadata = {
   title: "Terapias Manuais Modernas — São Carlos · 20, 21, 27 e 28 de Junho",
@@ -112,6 +113,7 @@ export default function TurmaSaoCarlos() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#FAF7F1] text-[#1A1F1B] antialiased">
+      <SmoothScrollOnHash />
       {/* Grain texture */}
       <div
         className="pointer-events-none fixed inset-0 z-1 opacity-5"
