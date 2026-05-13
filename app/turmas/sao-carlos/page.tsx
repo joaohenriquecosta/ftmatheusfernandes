@@ -477,7 +477,6 @@ export default function TurmaSaoCarlos() {
                 <>Inscrições encerradas — as 20 vagas foram preenchidas.</>
               ) : (
                 <>
-                  O preço sobe a cada semana.{" "}
                   <span className="text-[#F4C690]">
                     Cada lote tem vagas limitadas
                   </span>{" "}
