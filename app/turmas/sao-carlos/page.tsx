@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
@@ -22,31 +23,31 @@ const LOTES = [
   {
     nome: "Lote 1 · promocional",
     prazo: "até 24 de Maio · 23h59",
-    valor: "599,99",
+    valor: "699,99",
     endsAt: "2026-05-24T23:59:59-03:00",
   },
   {
     nome: "Lote 2",
     prazo: "até 31 de Maio · 23h59",
-    valor: "699,99",
+    valor: "799,99",
     endsAt: "2026-05-31T23:59:59-03:00",
   },
   {
     nome: "Lote 3",
     prazo: "até 7 de Junho · 23h59",
-    valor: "799,99",
+    valor: "899,99",
     endsAt: "2026-06-07T23:59:59-03:00",
   },
   {
     nome: "Lote 4",
     prazo: "até 14 de Junho · 23h59",
-    valor: "899,99",
+    valor: "999,99",
     endsAt: "2026-06-14T23:59:59-03:00",
   },
   {
     nome: "Lote final",
     prazo: "até o início do curso",
-    valor: "999,99",
+    valor: "1099,99",
     endsAt: "2026-06-20T08:00:00-03:00",
   },
 ];
@@ -64,12 +65,12 @@ const MODULOS = [
   },
   {
     num: "ii",
-    title: "Coluna Lombar",
+    title: "Coluna Vertebral — cervical, torácica e lombar",
     topics: [
-      "Avaliação completa e triagem de bandeiras vermelhas",
-      "Manipulação quiroprática segura para a região lombar",
-      "Neurodinâmica de membros inferiores (Slump, Lasègue)",
-      "Liberação miofascial profunda de quadrado lombar e psoas",
+      "Avaliação segmentar e triagem de bandeiras vermelhas em toda a coluna vertebral",
+      "Manipulações quiropráticas seguras em toda a coluna vertebral",
+      "Neurodinâmica integrada: MMSS (mediano, ulnar, radial) e MMII (Slump, Lasègue, femoral)",
+      "Mobilizações Maitland e Mulligan + liberação miofascial profunda dos paravertebrais, quadrado lombar e psoas",
     ],
   },
   {
@@ -269,27 +270,39 @@ export default function TurmaSaoCarlos() {
       <section className="relative z-2 border-t border-[#1F4A33]/10 bg-[#F5F1E8]">
         <div className="mx-auto max-w-[1200px] px-6 py-24 md:px-12 md:py-32">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-4">
+            {/* Photo */}
+            <div className="lg:col-span-5">
+              <div className="relative overflow-hidden">
+                <Image
+                  src="/matheus.jpeg"
+                  alt="Matheus Fernandes, fisioterapeuta esportivo"
+                  width={800}
+                  height={1067}
+                  className="h-auto w-full object-cover"
+                  sizes="(max-width: 1024px) 100vw, 480px"
+                />
+                <div className="pointer-events-none absolute inset-0 border border-[#1F4A33]/10" />
+              </div>
+              <div className="mt-4 text-[10px] tracking-[0.22em] text-[#4A524C]/70 uppercase">
+                Matheus Fernandes · CREFITO 3/321383-F
+              </div>
+            </div>
+
+            {/* Bio */}
+            <div className="lg:col-span-7">
               <div className="mb-6 inline-flex items-center gap-3.5 text-[11px] font-semibold tracking-[0.3em] text-[#E89B3C] uppercase">
                 <span className="h-px w-8 bg-[#E89B3C]" />
                 <span>O instrutor</span>
               </div>
+
               <h2
-                className="text-[clamp(36px,4.5vw,52px)] leading-[1.05] tracking-[-0.015em] text-[#1F4A33]"
+                className="mb-8 text-[clamp(36px,4.5vw,52px)] leading-[1.05] tracking-[-0.015em] text-[#1F4A33]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
-                Matheus
-                <br />
+                Matheus{" "}
                 <em className="font-light text-[#E89B3C] italic">Fernandes.</em>
               </h2>
-              <div className="mt-6 text-[11px] tracking-[0.2em] text-[#4A524C] uppercase">
-                CREFITO 3/321383-F
-                <br />
-                Fisioterapeuta esportivo
-              </div>
-            </div>
 
-            <div className="lg:col-span-8">
               <p
                 className="mb-6 text-[19px] leading-[1.55] font-light text-[#1A1F1B]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
@@ -297,16 +310,41 @@ export default function TurmaSaoCarlos() {
                 Atuação clínica em fisioterapia esportiva, com experiência em
                 avaliação, diagnóstico diferencial e reabilitação de atletas
                 amadores e profissionais. Conteúdo construído com base em
-                evidência científica atualizada e 36 horas de prática
-                hands-on.
+                evidência científica atualizada e 36 horas de prática hands-on.
               </p>
-              <p className="text-[14px] leading-[1.7] text-[#4A524C]">
-                Pós-graduado em Fisioterapia Traumato-Ortopédica com ênfase em
-                Terapia Manual (Barão de Mauá), Fisioterapia Esportiva
-                (CETE/UNIFESP) e Ciência do Treinamento de Força
-                (Musculab/UFSCar). Certificado em Quiropraxia Clínica e
-                Dinamometria Manual Isométrica.
-              </p>
+
+              {/* Formação */}
+              <div className="mt-10 grid gap-6 border-t border-[#1F4A33]/15 pt-8 md:grid-cols-[160px_1fr] md:gap-10">
+                <div className="text-[11px] font-semibold tracking-[0.3em] text-[#1F4A33] uppercase">
+                  Formação
+                </div>
+                <div
+                  className="space-y-2 text-[15px] leading-[1.65] font-light text-[#4A524C]"
+                  style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
+                >
+                  <ul className="space-y-2">
+                    <li>
+                      Pós-graduado em Fisioterapia Traumato-Ortopédica com
+                      ênfase em Terapia Manual{" "}
+                      <span className="text-[#1F4A33]/70">— Barão de Mauá</span>
+                    </li>
+                    <li>
+                      Pós-graduado em Fisioterapia Esportiva{" "}
+                      <span className="text-[#1F4A33]/70">
+                        — CETE / UNIFESP
+                      </span>
+                    </li>
+                    <li>
+                      Pós-graduando em Ciência do Treinamento de Força{" "}
+                      <span className="text-[#1F4A33]/70">
+                        — Musculab / UFSCAR
+                      </span>
+                    </li>
+                    <li>Certificado em Quiropraxia Clínica.</li>
+                    <li>Certificado em Dinamometria Manual Isométrica.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -479,15 +517,22 @@ export default function TurmaSaoCarlos() {
                   }`}
                 >
                   <span
-                    className={`absolute top-7 left-0 inline-block h-4 w-4 rounded-full border-2 md:h-6 md:w-6 ${
-                      isAtual
-                        ? "border-[#E89B3C] bg-[#E89B3C]"
-                        : isEncerrado
-                          ? "border-[#FAF7F1]/20 bg-transparent"
-                          : "border-[#FAF7F1]/30 bg-[#1F4A33]"
-                    }`}
+                    className="absolute top-7 left-0 inline-flex h-4 w-4 items-center justify-center md:h-6 md:w-6"
                     aria-hidden
-                  />
+                  >
+                    {isAtual && (
+                      <span className="absolute inline-flex h-full w-full animate-[recPulse_1.4s_ease-out_infinite] rounded-full bg-[#E89B3C] opacity-70" />
+                    )}
+                    <span
+                      className={`relative inline-block h-full w-full rounded-full border-2 ${
+                        isAtual
+                          ? "border-[#E89B3C] bg-[#E89B3C]"
+                          : isEncerrado
+                            ? "border-[#FAF7F1]/20 bg-transparent"
+                            : "border-[#FAF7F1]/30 bg-[#1F4A33]"
+                      }`}
+                    />
+                  </span>
                   <div className="md:col-span-4">
                     <div
                       className={`mb-1 text-[11px] font-semibold tracking-[0.24em] uppercase ${
