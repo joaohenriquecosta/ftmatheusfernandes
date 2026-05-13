@@ -199,9 +199,9 @@ export default function TurmaUberaba() {
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
                 Atuação clínica em fisioterapia esportiva, com experiência em
-                avaliação, diagnóstico diferencial e reabilitação de atletas
-                amadores e profissionais. Conteúdo construído com base em
-                evidência científica atualizada.
+                avaliação, diagnóstico diferencial e reabilitação no esporte,
+                do nível amador ao profissional. Conteúdo construído com base
+                em evidência científica atualizada.
               </p>
               <p className="text-[14px] leading-[1.7] text-[#4A524C]">
                 Referências do conteúdo:{" "}
@@ -430,8 +430,10 @@ export default function TurmaUberaba() {
                 className="mb-3 text-[clamp(28px,3.5vw,40px)] leading-[1.1] text-[#FAF7F1]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
-                Pronto pra reservar{" "}
-                <em className="font-light text-[#F4C690] italic">sua vaga?</em>
+                Garanta já{" "}
+                <em className="font-light text-[#F4C690] italic">
+                  a sua vaga.
+                </em>
               </div>
               <p className="max-w-[480px] text-[14px] leading-[1.6] text-[#FAF7F1]/70">
                 Pagamento via Pix ou Pix parcelado em até 3x. Confirmação
@@ -490,7 +492,7 @@ export default function TurmaUberaba() {
                 {[
                   {
                     q: "Para quem é o curso?",
-                    a: "Estudantes de fisioterapia a partir do 6º período, recém-formados e profissionais que querem atualizar suas técnicas com respaldo científico.",
+                    a: "Estudantes de fisioterapia a partir do 6º período, profissionais em início de carreira ou já atuantes, que queiram atualizar suas técnicas com respaldo científico.",
                   },
                   {
                     q: "Tem certificado?",
@@ -498,7 +500,7 @@ export default function TurmaUberaba() {
                   },
                   {
                     q: "Política de cancelamento?",
-                    a: "Conforme o Código de Defesa do Consumidor, você tem 7 dias após a inscrição para solicitar reembolso integral. Após esse período, a vaga pode ser transferida para outro participante.",
+                    a: "Conforme o Código de Defesa do Consumidor, você tem 7 dias após a inscrição para solicitar reembolso integral. Após esse período, a vaga pode ser transferida para outra pessoa.",
                   },
                   {
                     q: "Preciso levar algum material?",

@@ -79,7 +79,7 @@ export default function Home() {
             </span>
 
             {/* Mobile: 2 linhas (Próxima turma · SC / data) */}
-            <span className="flex flex-col leading-[1.25] sm:hidden">
+            <span className="flex flex-col leading-tight sm:hidden">
               <span>
                 <span className="text-[#F4C690]">Próxima turma</span> · São
                 Carlos
@@ -305,10 +305,10 @@ export default function Home() {
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
                 Atuação clínica em fisioterapia esportiva, com experiência em
-                avaliação, diagnóstico diferencial e reabilitação de atletas
-                amadores e profissionais. Atendimento individualizado em São
-                Carlos/SP e cursos de formação para fisioterapeutas em todo o
-                país.
+                avaliação, diagnóstico diferencial e reabilitação no esporte,
+                do nível amador ao profissional. Atendimento individualizado em
+                São Carlos/SP e cursos de formação para fisioterapeutas em todo
+                o país.
               </p>
 
               {/* Formação */}
@@ -347,7 +347,7 @@ export default function Home() {
               {/* CTA avaliação inline */}
               <div className="mt-10 flex flex-col items-start gap-6 border-t border-[#1F4A33]/15 pt-8 lg:flex-row lg:items-center lg:gap-8">
                 <div
-                  className="text-[clamp(20px,2.4vw,26px)] leading-[1.25] text-[#1F4A33]"
+                  className="text-[clamp(20px,2.4vw,26px)] leading-tight text-[#1F4A33]"
                   style={{
                     fontFamily: "var(--font-fraunces), Georgia, serif",
                   }}

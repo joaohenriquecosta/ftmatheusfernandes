@@ -308,9 +308,10 @@ export default function TurmaSaoCarlos() {
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
                 Atuação clínica em fisioterapia esportiva, com experiência em
-                avaliação, diagnóstico diferencial e reabilitação de atletas
-                amadores e profissionais. Conteúdo construído com base em
-                evidência científica atualizada e 36 horas de prática hands-on.
+                avaliação, diagnóstico diferencial e reabilitação no esporte,
+                do nível amador ao profissional. Conteúdo construído com base
+                em evidência científica atualizada e 36 horas de prática
+                hands-on.
               </p>
 
               {/* Formação */}
@@ -641,8 +642,10 @@ export default function TurmaSaoCarlos() {
                 className="mb-3 text-[clamp(28px,3.5vw,40px)] leading-[1.1] text-[#FAF7F1]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
-                Pronto pra reservar{" "}
-                <em className="font-light text-[#F4C690] italic">sua vaga?</em>
+                Garanta já{" "}
+                <em className="font-light text-[#F4C690] italic">
+                  a sua vaga.
+                </em>
               </div>
               <p className="max-w-[520px] text-[14px] leading-[1.6] text-[#FAF7F1]/70">
                 Fala comigo direto no WhatsApp — eu te confirmo o lote vigente,
@@ -701,7 +704,7 @@ export default function TurmaSaoCarlos() {
                 {[
                   {
                     q: "Para quem é o curso?",
-                    a: "Fisioterapeutas, recém-formados e profissionais que querem ampliar o arsenal de técnicas manuais com respaldo clínico.",
+                    a: "Fisioterapeutas em início de carreira ou já atuantes na clínica, que querem ampliar o arsenal de técnicas manuais com respaldo científico.",
                   },
                   {
                     q: "Tem certificado?",
