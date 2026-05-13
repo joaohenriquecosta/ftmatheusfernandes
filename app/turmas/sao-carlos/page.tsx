@@ -1,18 +1,112 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terapias Manuais Modernas — Uberaba · 16 e 17 de Maio",
+  title: "Terapias Manuais Modernas — São Carlos · 20, 21, 27 e 28 de Junho",
   description:
-    "Curso presencial de Terapias Manuais Modernas com Matheus Fernandes. Diagnóstico diferencial, raciocínio clínico e técnicas baseadas em evidência. Uberaba, MG · 16 e 17 de Maio de 2026.",
+    "Curso presencial de Terapias Manuais Modernas com Matheus Fernandes. Dry Needling, mobilização miofascial, manipulações quiropráticas, Maitland, Mulligan, neurodinâmica e crochetagem. São Carlos/SP · 20, 21, 27 e 28 de Junho de 2026.",
   robots: { index: false, follow: false },
 };
 
+// Re-renderiza no máximo a cada hora pra atualizar o lote vigente quando o prazo virar.
+export const revalidate = 3600;
+
 const INSTAGRAM_URL = "https://www.instagram.com/ft.matheusfernandes/";
 const WHATSAPP_URL =
-  "https://wa.me/5516991167474?text=Ol%C3%A1!%20Quero%20garantir%20minha%20vaga%20na%20turma%20de%20Uberaba%20(16%20e%2017%20de%20maio).";
+  "https://wa.me/5516991167474?text=Ol%C3%A1!%20Quero%20garantir%20minha%20vaga%20na%20turma%20de%20S%C3%A3o%20Carlos%20(20%2C%2021%2C%2027%20e%2028%20de%20junho).";
 
-export default function TurmaUberaba() {
+// Prazos em horário de Brasília (UTC-3). O lote ativo é o primeiro cujo endsAt
+// ainda é futuro em relação a `now`. Quando todos expiram, nenhum CTA de lote
+// aparece — só os dias do curso restam.
+const LOTES = [
+  {
+    nome: "Lote 1 · promocional",
+    prazo: "até 24 de Maio · 23h59",
+    valor: "699,99",
+    endsAt: "2026-05-24T23:59:59-03:00",
+  },
+  {
+    nome: "Lote 2",
+    prazo: "até 31 de Maio · 23h59",
+    valor: "799,99",
+    endsAt: "2026-05-31T23:59:59-03:00",
+  },
+  {
+    nome: "Lote 3",
+    prazo: "até 7 de Junho · 23h59",
+    valor: "899,99",
+    endsAt: "2026-06-07T23:59:59-03:00",
+  },
+  {
+    nome: "Lote 4",
+    prazo: "até 14 de Junho · 23h59",
+    valor: "999,99",
+    endsAt: "2026-06-14T23:59:59-03:00",
+  },
+  {
+    nome: "Lote final",
+    prazo: "até o início do curso",
+    valor: "1099,99",
+    endsAt: "2026-06-20T08:00:00-03:00",
+  },
+];
+
+const MODULOS = [
+  {
+    num: "i",
+    title: "Complexo do Ombro e Quadril",
+    topics: [
+      "Avaliação articular, muscular e neural integrada",
+      "Diagnóstico diferencial: impacto, instabilidade, tendinopatia",
+      "Tratamento manual orientado por raciocínio clínico",
+      "Mobilizações Maitland e Mulligan aplicadas",
+    ],
+  },
+  {
+    num: "ii",
+    title: "Coluna Vertebral — cervical, torácica e lombar",
+    topics: [
+      "Avaliação segmentar e triagem de bandeiras vermelhas em toda a coluna vertebral",
+      "Manipulações quiropráticas seguras em toda a coluna vertebral",
+      "Neurodinâmica integrada: MMSS (mediano, ulnar, radial) e MMII (Slump, Lasègue, femoral)",
+      "Mobilizações Maitland e Mulligan + liberação miofascial profunda dos paravertebrais, quadrado lombar e psoas",
+    ],
+  },
+  {
+    num: "iii",
+    title: "Joelho e Tornozelo",
+    topics: [
+      "Diagnóstico diferencial das dores anteriores e laterais",
+      "Mobilizações articulares para ganho de ADM",
+      "Floss Band aplicado em compressão e descompressão",
+      "Crochetagem para restrições fasciais e cicatrizes",
+    ],
+  },
+];
+
+const TECNICAS = [
+  "Dry Needling",
+  "Mobilização miofascial",
+  "Compressão isquêmica",
+  "Manipulações quiropráticas",
+  "Crochetagem",
+  "Floss Band",
+  "Mobilizações Maitland e Mulligan",
+  "Neurodinâmica",
+];
+
+export default function TurmaSaoCarlos() {
+  // Intencionalmente impuro: o lote vigente depende do tempo. A página é um
+  // Server Component com `revalidate = 3600`, então o render é refeito ao
+  // menos uma vez por hora e o lote atualiza junto.
+  // eslint-disable-next-line react-hooks/purity
+  const now = Date.now();
+  // Primeiro lote cujo endsAt ainda é futuro. -1 = todos expiraram.
+  const loteAtualIndex = LOTES.findIndex(
+    (l) => new Date(l.endsAt).getTime() > now,
+  );
+
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#FAF7F1] text-[#1A1F1B] antialiased">
       {/* Grain texture */}
@@ -38,7 +132,7 @@ export default function TurmaUberaba() {
           </span>
         </Link>
         <div className="hidden text-[11px] tracking-[0.18em] text-[#4A524C] uppercase md:block">
-          Turma · Uberaba 2026
+          Turma · São Carlos 2026
         </div>
       </nav>
 
@@ -49,7 +143,7 @@ export default function TurmaUberaba() {
           <div className="lg:col-span-7">
             <div className="mb-10 inline-flex animate-[fadeUp_0.8s_ease_0.2s_both] items-center gap-3.5 text-[11px] font-semibold tracking-[0.3em] text-[#E89B3C] uppercase">
               <span className="h-px w-8 bg-[#E89B3C]" />
-              <span>Curso presencial · 16h</span>
+              <span>2 finais de semana · 36h · 20 vagas</span>
             </div>
 
             <h1
@@ -66,9 +160,10 @@ export default function TurmaUberaba() {
               className="mb-14 max-w-[540px] animate-[fadeUp_0.9s_ease_0.6s_both] text-[20px] leading-normal font-light text-[#4A524C]"
               style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
             >
-              Dois dias intensivos de prática hands-on. Diagnóstico diferencial,
-              raciocínio clínico e técnicas com respaldo científico — Mulligan,
-              Mckenzie, neurodinâmica, soltura miofascial, bandagem funcional.
+              Quatro dias em dois finais de semana — 20, 21, 27 e 28 de junho.
+              Prática hands-on com Dry Needling, manipulações quiropráticas,
+              Maitland, Mulligan, neurodinâmica, crochetagem e Floss Band —
+              aplicados ao ombro, quadril, coluna lombar, joelho e tornozelo.
             </p>
 
             <a
@@ -101,34 +196,36 @@ export default function TurmaUberaba() {
           {/* Right: date block */}
           <div className="lg:col-span-5 lg:pl-8">
             <div className="relative animate-[fadeUp_1s_ease_0.5s_both]">
-              {/* Decorative outline date */}
+              {/* Decorative outline — carga horária */}
               <div
-                className="absolute -top-12 -right-4 text-[clamp(140px,18vw,240px)] leading-none font-light text-transparent select-none lg:right-0"
+                className="absolute top-10 -right-4 text-[clamp(120px,18vw,240px)] leading-none font-light text-transparent select-none sm:-top-12 lg:right-0"
                 style={{
                   fontFamily: "var(--font-fraunces), Georgia, serif",
                   WebkitTextStroke: "1px rgba(31, 74, 51, 0.12)",
                   fontStyle: "italic",
                 }}
+                aria-hidden
               >
-                16
+                36h
               </div>
 
               <div className="relative border-l-[3px] border-[#E89B3C] py-2 pl-8">
                 <div className="mb-2 text-[11px] font-semibold tracking-[0.28em] text-[#E89B3C] uppercase">
-                  Sábado e Domingo
+                  Dois finais de semana
                 </div>
                 <div
-                  className="text-[clamp(48px,7vw,80px)] leading-none tracking-[-0.02em] text-[#1F4A33]"
+                  className="text-[clamp(40px,5.5vw,64px)] leading-[1.05] tracking-[-0.02em] text-[#1F4A33]"
                   style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
                 >
-                  16 <em className="font-light text-[#E89B3C] italic">&amp;</em>{" "}
-                  17
+                  20, 21
+                  <br />
+                  <em className="font-light text-[#E89B3C] italic">27 e 28</em>
                 </div>
                 <div
-                  className="text-[24px] font-light text-[#4A524C]"
+                  className="mt-2 text-[22px] font-light text-[#4A524C]"
                   style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
                 >
-                  Maio de 2026
+                  Junho de 2026
                 </div>
               </div>
 
@@ -143,9 +240,9 @@ export default function TurmaUberaba() {
                       fontFamily: "var(--font-fraunces), Georgia, serif",
                     }}
                   >
-                    Centro Educacional
+                    Multfisio
                     <br />
-                    UFTM · Uberaba/MG
+                    Vila Prado · São Carlos/SP
                   </div>
                 </div>
                 <div>
@@ -158,9 +255,9 @@ export default function TurmaUberaba() {
                       fontFamily: "var(--font-fraunces), Georgia, serif",
                     }}
                   >
-                    Limitadas a 30
+                    Limitadas a 20
                     <br />
-                    Últimas disponíveis
+                    Turma intimista
                   </div>
                 </div>
               </div>
@@ -173,27 +270,39 @@ export default function TurmaUberaba() {
       <section className="relative z-2 border-t border-[#1F4A33]/10 bg-[#F5F1E8]">
         <div className="mx-auto max-w-[1200px] px-6 py-24 md:px-12 md:py-32">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-4">
+            {/* Photo */}
+            <div className="lg:col-span-5">
+              <div className="relative overflow-hidden">
+                <Image
+                  src="/matheus.jpeg"
+                  alt="Matheus Fernandes, fisioterapeuta esportivo"
+                  width={800}
+                  height={1067}
+                  className="h-auto w-full object-cover"
+                  sizes="(max-width: 1024px) 100vw, 480px"
+                />
+                <div className="pointer-events-none absolute inset-0 border border-[#1F4A33]/10" />
+              </div>
+              <div className="mt-4 text-[10px] tracking-[0.22em] text-[#4A524C]/70 uppercase">
+                Matheus Fernandes · CREFITO 3/321383-F
+              </div>
+            </div>
+
+            {/* Bio */}
+            <div className="lg:col-span-7">
               <div className="mb-6 inline-flex items-center gap-3.5 text-[11px] font-semibold tracking-[0.3em] text-[#E89B3C] uppercase">
                 <span className="h-px w-8 bg-[#E89B3C]" />
                 <span>O instrutor</span>
               </div>
+
               <h2
-                className="text-[clamp(36px,4.5vw,52px)] leading-[1.05] tracking-[-0.015em] text-[#1F4A33]"
+                className="mb-8 text-[clamp(36px,4.5vw,52px)] leading-[1.05] tracking-[-0.015em] text-[#1F4A33]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
-                Matheus
-                <br />
+                Matheus{" "}
                 <em className="font-light text-[#E89B3C] italic">Fernandes.</em>
               </h2>
-              <div className="mt-6 text-[11px] tracking-[0.2em] text-[#4A524C] uppercase">
-                CREFITO 3/321383-F
-                <br />
-                Fisioterapeuta esportivo
-              </div>
-            </div>
 
-            <div className="lg:col-span-8">
               <p
                 className="mb-6 text-[19px] leading-[1.55] font-light text-[#1A1F1B]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
@@ -201,21 +310,41 @@ export default function TurmaUberaba() {
                 Atuação clínica em fisioterapia esportiva, com experiência em
                 avaliação, diagnóstico diferencial e reabilitação de atletas
                 amadores e profissionais. Conteúdo construído com base em
-                evidência científica atualizada.
+                evidência científica atualizada e 36 horas de prática hands-on.
               </p>
-              <p className="text-[14px] leading-[1.7] text-[#4A524C]">
-                Referências do conteúdo:{" "}
-                <span className="text-[#1F4A33]">Hegedus et al. (2012)</span>{" "}
-                para shoulder tests,{" "}
-                <span className="text-[#1F4A33]">Shacklock (2005)</span> em
-                neurodinâmica,{" "}
-                <span className="text-[#1F4A33]">May & Cina (2011)</span> para o
-                método McKenzie,{" "}
-                <span className="text-[#1F4A33]">Vicenzino et al. (2007)</span>{" "}
-                em mobilização com movimento, e{" "}
-                <span className="text-[#1F4A33]">Simons & Travell</span> em
-                pontos-gatilho miofasciais.
-              </p>
+
+              {/* Formação */}
+              <div className="mt-10 grid gap-6 border-t border-[#1F4A33]/15 pt-8 md:grid-cols-[160px_1fr] md:gap-10">
+                <div className="text-[11px] font-semibold tracking-[0.3em] text-[#1F4A33] uppercase">
+                  Formação
+                </div>
+                <div
+                  className="space-y-2 text-[15px] leading-[1.65] font-light text-[#4A524C]"
+                  style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
+                >
+                  <ul className="space-y-2">
+                    <li>
+                      Pós-graduado em Fisioterapia Traumato-Ortopédica com
+                      ênfase em Terapia Manual{" "}
+                      <span className="text-[#1F4A33]/70">— Barão de Mauá</span>
+                    </li>
+                    <li>
+                      Pós-graduado em Fisioterapia Esportiva{" "}
+                      <span className="text-[#1F4A33]/70">
+                        — CETE / UNIFESP
+                      </span>
+                    </li>
+                    <li>
+                      Pós-graduando em Ciência do Treinamento de Força{" "}
+                      <span className="text-[#1F4A33]/70">
+                        — Musculab / UFSCAR
+                      </span>
+                    </li>
+                    <li>Certificado em Quiropraxia Clínica.</li>
+                    <li>Certificado em Dinamometria Manual Isométrica.</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -227,62 +356,21 @@ export default function TurmaUberaba() {
           <div className="mb-16 max-w-[720px]">
             <div className="mb-6 inline-flex items-center gap-3.5 text-[11px] font-semibold tracking-[0.3em] text-[#E89B3C] uppercase">
               <span className="h-px w-8 bg-[#E89B3C]" />
-              <span>Programa · 4 módulos</span>
+              <span>Programa · 3 grandes blocos</span>
             </div>
             <h2
               className="text-[clamp(40px,5vw,64px)] leading-[1.05] tracking-[-0.02em] text-[#1F4A33]"
               style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
             >
-              O corpo todo,{" "}
+              Avaliação e tratamento,{" "}
               <em className="font-light text-[#E89B3C] italic">
-                articulação por articulação.
+                região por região.
               </em>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 gap-0 border-t border-[#1F4A33]">
-            {[
-              {
-                num: "i",
-                title: "Complexo do Ombro e Cintura Escapular",
-                topics: [
-                  "Diagnóstico diferencial: articular, muscular ou neural",
-                  "Testes de Neer, Hawkins-Kennedy, Jobe, Patte, O'Brien, Gerber",
-                  "Avaliação neurodinâmica (ULNT 1, 2b, 3) — mediano, radial e ulnar",
-                  "Mobilização escapular, decoaptação, liberação miofascial",
-                ],
-              },
-              {
-                num: "ii",
-                title: "Cotovelo, Punho e Mão",
-                topics: [
-                  "Raciocínio clínico para epicondilalgias e síndromes compressivas",
-                  "Avaliação de tendinopatia (Cozen, Mill) e diferenciação neural",
-                  "Técnica de Mulligan (MWM) para ganho de força de preensão",
-                  "Testes de túnel do carpo e mobilização de ossos do carpo",
-                ],
-              },
-              {
-                num: "iii",
-                title: "Coluna Vertebral Completa",
-                topics: [
-                  "Método McKenzie (MDT): centralização vs. periferização",
-                  "Neurodinâmica de membros inferiores: Slump, Lasègue, femoral",
-                  "Tratamento de dores inespecíficas: quadrado lombar, psoas",
-                  "Liberação miofascial profunda e compressão isquêmica",
-                ],
-              },
-              {
-                num: "iv",
-                title: "Joelho e Tornozelo",
-                topics: [
-                  "Pontos-gatilho: vasto medial, vasto lateral, poplíteo",
-                  "Mobilização patelar, técnica de McConnell, kinesio em Y",
-                  "Bandagem funcional clássica e bandagem para sindesmose",
-                  "Low-Dye taping para fascite plantar, deslizamento talar",
-                ],
-              },
-            ].map((mod) => (
+            {MODULOS.map((mod) => (
               <div
                 key={mod.num}
                 className="group grid grid-cols-1 gap-6 border-b border-[#1F4A33]/15 py-10 transition-colors hover:bg-[#F5F1E8]/50 md:grid-cols-12 md:gap-10 md:py-14"
@@ -324,6 +412,54 @@ export default function TurmaUberaba() {
         </div>
       </section>
 
+      {/* ====== TÉCNICAS ====== */}
+      <section className="relative z-2 border-t border-[#1F4A33]/10 bg-[#F5F1E8]">
+        <div className="mx-auto max-w-[1200px] px-6 py-24 md:px-12 md:py-32">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-4">
+              <div className="mb-6 inline-flex items-center gap-3.5 text-[11px] font-semibold tracking-[0.3em] text-[#E89B3C] uppercase">
+                <span className="h-px w-8 bg-[#E89B3C]" />
+                <span>Técnicas</span>
+              </div>
+              <h2
+                className="text-[clamp(36px,4.5vw,52px)] leading-[1.05] tracking-[-0.015em] text-[#1F4A33]"
+                style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
+              >
+                Caixa de{" "}
+                <em className="font-light text-[#E89B3C] italic">
+                  ferramentas.
+                </em>
+              </h2>
+              <p className="mt-6 text-[14px] leading-[1.7] text-[#4A524C]">
+                Cada técnica é apresentada com indicação clínica, evidência e
+                prática supervisionada em dupla.
+              </p>
+            </div>
+
+            <div className="lg:col-span-8">
+              <ul className="grid grid-cols-1 gap-0 border-t border-[#1F4A33]/15 sm:grid-cols-2">
+                {TECNICAS.map((tec, i) => (
+                  <li
+                    key={tec}
+                    className={`flex items-center gap-4 border-b border-[#1F4A33]/15 py-5 text-[16px] text-[#1F4A33] sm:border-b ${
+                      i % 2 === 0 ? "sm:border-r sm:pr-6" : "sm:pl-6"
+                    }`}
+                    style={{
+                      fontFamily: "var(--font-fraunces), Georgia, serif",
+                    }}
+                  >
+                    <span className="text-[11px] font-semibold tracking-[0.2em] text-[#E89B3C]">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span>{tec}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ====== INVESTIMENTO ====== */}
       <section className="relative z-2 bg-[#1F4A33] text-[#FAF7F1]">
         <div
@@ -336,87 +472,162 @@ export default function TurmaUberaba() {
           <div className="mb-16 max-w-[720px]">
             <div className="mb-6 inline-flex items-center gap-3.5 text-[11px] font-semibold tracking-[0.3em] text-[#F4C690] uppercase">
               <span className="h-px w-8 bg-[#F4C690]" />
-              <span>Investimento</span>
+              <span>Investimento · 5 lotes</span>
             </div>
             <h2
               className="text-[clamp(40px,5vw,64px)] leading-[1.05] tracking-[-0.02em] text-[#FAF7F1]"
               style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
             >
-              Dois lotes,{" "}
+              Quanto antes você entra,{" "}
               <em className="font-light text-[#F4C690] italic">
-                vagas limitadas.
+                mais econômico fica.
               </em>
             </h2>
+            <p className="mt-6 max-w-[560px] text-[14px] leading-[1.7] text-[#FAF7F1]/70">
+              {loteAtualIndex === -1 ? (
+                <>Inscrições encerradas — turma cheia ou em andamento.</>
+              ) : (
+                <>
+                  O preço sobe a cada semana. Lote vigente:{" "}
+                  <span className="text-[#F4C690]">
+                    {LOTES[loteAtualIndex].nome}
+                  </span>{" "}
+                  ({LOTES[loteAtualIndex].prazo}) — vagas limitadas a 20
+                  participantes.
+                </>
+              )}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-0 md:grid-cols-3">
-            {/* Lote 1 */}
-            <div className="border border-[#FAF7F1]/15 p-10">
-              <div className="mb-3 text-[11px] font-semibold tracking-[0.28em] text-[#F4C690] uppercase">
-                Lote 1 · Esgotado
-              </div>
-              <div
-                className="mb-3 text-[14px] text-[#FAF7F1]/50 line-through"
-                style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
-              >
-                R$ 280
-              </div>
-              <p className="text-[13px] leading-[1.6] text-[#FAF7F1]/60">
-                Disponível até 22/03 — encerrado.
-              </p>
-            </div>
+          {/* Timeline de lotes */}
+          <ol className="relative">
+            <div
+              className="absolute top-0 bottom-0 left-[7px] w-px bg-[#FAF7F1]/15 md:left-[11px]"
+              aria-hidden
+            />
+            {LOTES.map((lote, idx) => {
+              const isAtual = idx === loteAtualIndex;
+              const isEncerrado =
+                loteAtualIndex === -1 || idx < loteAtualIndex;
+              return (
+                <li
+                  key={lote.nome}
+                  className={`relative grid grid-cols-1 items-baseline gap-6 py-6 pl-10 md:grid-cols-12 md:gap-10 md:pl-16 ${
+                    isEncerrado ? "opacity-40" : ""
+                  }`}
+                >
+                  <span
+                    className="absolute top-7 left-0 inline-flex h-4 w-4 items-center justify-center md:h-6 md:w-6"
+                    aria-hidden
+                  >
+                    {isAtual && (
+                      <span className="absolute inline-flex h-full w-full animate-[recPulse_1.4s_ease-out_infinite] rounded-full bg-[#E89B3C] opacity-70" />
+                    )}
+                    <span
+                      className={`relative inline-block h-full w-full rounded-full border-2 ${
+                        isAtual
+                          ? "border-[#E89B3C] bg-[#E89B3C]"
+                          : isEncerrado
+                            ? "border-[#FAF7F1]/20 bg-transparent"
+                            : "border-[#FAF7F1]/30 bg-[#1F4A33]"
+                      }`}
+                    />
+                  </span>
+                  <div className="md:col-span-4">
+                    <div
+                      className={`mb-1 text-[11px] font-semibold tracking-[0.24em] uppercase ${
+                        isAtual ? "text-[#E89B3C]" : "text-[#F4C690]/70"
+                      }`}
+                    >
+                      {lote.nome}
+                      {isAtual
+                        ? " · atual"
+                        : isEncerrado
+                          ? " · encerrado"
+                          : ""}
+                    </div>
+                    <div className="text-[13px] text-[#FAF7F1]/60">
+                      {lote.prazo}
+                    </div>
+                  </div>
+                  <div className="md:col-span-5">
+                    <div
+                      className={`leading-none ${
+                        isAtual
+                          ? "text-[clamp(40px,5vw,56px)] text-[#FAF7F1]"
+                          : "text-[clamp(28px,3.5vw,36px)] text-[#FAF7F1]/80"
+                      } ${isEncerrado ? "line-through" : ""}`}
+                      style={{
+                        fontFamily: "var(--font-fraunces), Georgia, serif",
+                      }}
+                    >
+                      <span
+                        className={`align-top ${
+                          isAtual
+                            ? "text-[20px] text-[#F4C690]"
+                            : "text-[14px] text-[#F4C690]/70"
+                        }`}
+                      >
+                        R$
+                      </span>{" "}
+                      {lote.valor}
+                    </div>
+                  </div>
+                  <div className="md:col-span-3 md:text-right">
+                    {isAtual ? (
+                      <a
+                        href={WHATSAPP_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 border border-[#E89B3C] bg-[#E89B3C] px-5 py-3 text-[12px] font-semibold tracking-[0.2em] text-[#1F4A33] uppercase transition-colors hover:bg-[#FAF7F1] hover:border-[#FAF7F1]"
+                      >
+                        Quero esse lote →
+                      </a>
+                    ) : (
+                      <span className="text-[11px] tracking-[0.2em] text-[#FAF7F1]/40 uppercase">
+                        {isEncerrado ? "Encerrado" : "Próximo"}
+                      </span>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
 
-            {/* Lote 2 - destacado */}
-            <div className="border border-[#E89B3C] bg-[#E89B3C]/8 p-10 md:-my-2">
-              <div className="mb-3 inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.28em] text-[#E89B3C] uppercase">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#E89B3C]" />
-                Lote 2 · Atual
+          {/* O que está incluso */}
+          <div className="mt-16 grid grid-cols-1 gap-6 border-t border-[#FAF7F1]/15 pt-12 md:grid-cols-3">
+            <div>
+              <div className="mb-2 text-[10px] font-semibold tracking-[0.24em] text-[#F4C690] uppercase">
+                Material
               </div>
               <div
-                className="mb-1 text-[56px] leading-none text-[#FAF7F1]"
+                className="text-[16px] text-[#FAF7F1]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
-                <span className="text-[24px] align-top text-[#F4C690]">R$</span>{" "}
-                350
-              </div>
-              <div
-                className="mb-6 text-[14px] font-light text-[#F4C690] italic"
-                style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
-              >
-                ou Pix em até 3x
-              </div>
-              <p className="mb-6 text-[13px] leading-[1.6] text-[#FAF7F1]/70">
-                Inscrição individual. Disponível até 30/04 ou enquanto houver
-                vagas.
-              </p>
-              <div className="border-t border-[#FAF7F1]/15 pt-4 text-[12px] leading-normal text-[#FAF7F1]/60">
-                Inclui certificado, material impresso e coffee break nos dois
-                dias.
+                Apostila impressa com todo o conteúdo do curso.
               </div>
             </div>
-
-            {/* Dobradinha */}
-            <div className="border border-[#FAF7F1]/15 p-10">
-              <div className="mb-3 text-[11px] font-semibold tracking-[0.28em] text-[#F4C690] uppercase">
-                Dobradinha
+            <div>
+              <div className="mb-2 text-[10px] font-semibold tracking-[0.24em] text-[#F4C690] uppercase">
+                Certificado
               </div>
               <div
-                className="mb-1 text-[40px] leading-none text-[#FAF7F1]"
+                className="text-[16px] text-[#FAF7F1]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
-                <span className="text-[20px] align-top text-[#F4C690]">R$</span>{" "}
-                500
+                36 horas, emitido em PDF após a conclusão dos 4 dias.
+              </div>
+            </div>
+            <div>
+              <div className="mb-2 text-[10px] font-semibold tracking-[0.24em] text-[#F4C690] uppercase">
+                Pagamento
               </div>
               <div
-                className="mb-6 text-[13px] font-light text-[#F4C690] italic"
+                className="text-[16px] text-[#FAF7F1]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
-                R$ 250 por pessoa
+                Pix à vista. Parcelamento no cartão em breve.
               </div>
-              <p className="text-[13px] leading-[1.6] text-[#FAF7F1]/70">
-                Inscreva-se com um colega e divida o valor do primeiro lote.
-                Garante a vaga dos dois.
-              </p>
             </div>
           </div>
 
@@ -433,9 +644,9 @@ export default function TurmaUberaba() {
                 Pronto pra reservar{" "}
                 <em className="font-light text-[#F4C690] italic">sua vaga?</em>
               </div>
-              <p className="max-w-[480px] text-[14px] leading-[1.6] text-[#FAF7F1]/70">
-                Pagamento via Pix ou Pix parcelado em até 3x. Confirmação
-                imediata por email e adição ao grupo de WhatsApp da turma.
+              <p className="max-w-[520px] text-[14px] leading-[1.6] text-[#FAF7F1]/70">
+                Fala comigo direto no WhatsApp — eu te confirmo o lote vigente,
+                envio o link de pagamento e te adiciono no grupo da turma.
               </p>
             </div>
             <a
@@ -445,7 +656,7 @@ export default function TurmaUberaba() {
               className="group relative inline-flex shrink-0 items-center gap-3.5 overflow-hidden border border-[#E89B3C] bg-[#E89B3C] px-9 py-5 text-[15px] font-semibold tracking-[0.2em] text-[#1F4A33] uppercase"
             >
               <span className="absolute inset-0 -translate-y-full bg-[#FAF7F1] transition-transform duration-300 group-hover:translate-y-0" />
-              <span className="relative">Inscrever-se agora</span>
+              <span className="relative">Falar no WhatsApp</span>
               <svg
                 width="14"
                 height="14"
@@ -490,19 +701,27 @@ export default function TurmaUberaba() {
                 {[
                   {
                     q: "Para quem é o curso?",
-                    a: "Estudantes de fisioterapia a partir do 6º período, recém-formados e profissionais que querem atualizar suas técnicas com respaldo científico.",
+                    a: "Fisioterapeutas, recém-formados e profissionais que querem ampliar o arsenal de técnicas manuais com respaldo clínico.",
                   },
                   {
                     q: "Tem certificado?",
-                    a: "Sim — certificado de 16 horas, emitido em PDF e enviado por email após a conclusão dos dois dias.",
+                    a: "Sim — certificado de 36 horas, emitido em PDF e enviado por email após a conclusão dos quatro dias de curso.",
+                  },
+                  {
+                    q: "Como funciona o pagamento?",
+                    a: "No momento, via Pix. O parcelamento no cartão de crédito entra em breve — me chama no WhatsApp se quiser esperar essa opção.",
+                  },
+                  {
+                    q: "Posso transferir minha vaga?",
+                    a: "Não. A vaga é nominal e intransferível, justamente por respeitar a ordem de inscrição e o limite de 20 participantes.",
                   },
                   {
                     q: "Política de cancelamento?",
-                    a: "Conforme o Código de Defesa do Consumidor, você tem 7 dias após a inscrição para solicitar reembolso integral. Após esse período, a vaga pode ser transferida para outro participante.",
+                    a: "Conforme o Código de Defesa do Consumidor, você tem 7 dias após a inscrição para solicitar reembolso integral. Após esse prazo, não há reembolso nem transferência.",
                   },
                   {
                     q: "Preciso levar algum material?",
-                    a: "Roupa confortável para prática hands-on. Todo o material teórico, esparadrapos para bandagem e coffee break estão inclusos.",
+                    a: "Roupa confortável para prática hands-on (camiseta regata e shorts ajudam no acesso às regiões trabalhadas). Apostila e materiais técnicos estão inclusos.",
                   },
                 ].map((item) => (
                   <details
@@ -548,9 +767,9 @@ export default function TurmaUberaba() {
             </div>
 
             <div className="text-left text-[11px] tracking-[0.2em] text-[#4A524C] uppercase md:text-right">
-              <div>Realização em parceria com</div>
+              <div>Local do curso</div>
               <div className="mt-1 text-[#1F4A33]">
-                Liga Acadêmica Ligamento · UFTM
+                Multfisio · Vila Prado · São Carlos/SP
               </div>
             </div>
           </div>
