@@ -10,17 +10,32 @@ type Config = {
   baseUrl: string;
 };
 
+function resolveBaseUrl(): string {
+  // Em ordem de prioridade:
+  // 1. Variável explícita (sempre vence — usada em dev e overrides)
+  // 2. Domínio de produção do Vercel (custom domain, ex.: ftmatheusfernandes.com.br)
+  // 3. URL do deploy atual no Vercel (preview deploys, etc.)
+  // 4. Fallback fixo pro domínio de produção
+  if (process.env.NEXT_PUBLIC_BASE_URL) {
+    return process.env.NEXT_PUBLIC_BASE_URL;
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return "https://ftmatheusfernandes.com.br";
+}
+
 function loadConfig(): Config {
   const handle = process.env.INFINITEPAY_HANDLE;
   const apiUrl =
     process.env.INFINITEPAY_API_URL ?? "https://api.checkout.infinitepay.io";
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = resolveBaseUrl();
 
   if (!handle) {
     throw new Error("INFINITEPAY_HANDLE is not set");
-  }
-  if (!baseUrl) {
-    throw new Error("NEXT_PUBLIC_BASE_URL is not set");
   }
   return { handle, apiUrl, baseUrl };
 }

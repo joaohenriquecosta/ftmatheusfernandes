@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { DevCredit } from "@/components/dev-credit";
 import { ArrowRight } from "@/components/icons";
 
 export const metadata: Metadata = {
@@ -550,6 +551,8 @@ export default function TurmaUberaba() {
               </a>
             </div>
           </div>
+
+          <DevCredit />
         </div>
       </footer>
 
