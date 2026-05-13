@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const INSTAGRAM_URL = "https://www.instagram.com/ft.matheusfernandes/";
 const WHATSAPP_AVALIACAO =
-  "https://wa.me/5516991167474?text=Ol%C3%A1!%20Gostaria%20de%20marcar%20uma%20avalia%C3%A7%C3%A3o.";
+  "https://wa.me/5516991167474?text=Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20avalia%C3%A7%C3%A3o.";
 
 function ArrowRight({ className = "" }: { className?: string }) {
   return (
@@ -211,7 +211,9 @@ export default function Home() {
                   style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
                 >
                   Terapias manuais{" "}
-                  <em className="font-light text-[#E89B3C] italic">modernas.</em>
+                  <em className="font-light text-[#E89B3C] italic">
+                    modernas.
+                  </em>
                 </div>
 
                 <div
@@ -227,7 +229,9 @@ export default function Home() {
                     <div className="mt-1 text-[#1F4A33]">Multfisio</div>
                   </div>
                   <div>
-                    <div className="text-[9px] text-[#4A524C]/70">A partir de</div>
+                    <div className="text-[9px] text-[#4A524C]/70">
+                      A partir de
+                    </div>
                     <div
                       className="mt-1 text-[18px] tracking-normal text-[#1F4A33] normal-case"
                       style={{
@@ -318,13 +322,15 @@ export default function Home() {
                 >
                   <ul className="space-y-2">
                     <li>
-                      Pós-graduado em Fisioterapia Traumato-Ortopédica com ênfase
-                      em Terapia Manual{" "}
+                      Pós-graduado em Fisioterapia Traumato-Ortopédica com
+                      ênfase em Terapia Manual{" "}
                       <span className="text-[#1F4A33]/70">— Barão de Mauá</span>
                     </li>
                     <li>
                       Pós-graduado em Fisioterapia Esportiva{" "}
-                      <span className="text-[#1F4A33]/70">— CETE / UNIFESP</span>
+                      <span className="text-[#1F4A33]/70">
+                        — CETE / UNIFESP
+                      </span>
                     </li>
                     <li>
                       Pós-graduando em Ciência do Treinamento de Força{" "}
