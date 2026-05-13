@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { ArrowRight } from "@/components/icons";
+
 export const metadata: Metadata = {
   title: "Terapias Manuais Modernas — Uberaba · 16 e 17 de Maio",
   description:
@@ -79,22 +81,7 @@ export default function TurmaUberaba() {
             >
               <span className="absolute inset-0 -translate-y-full bg-[#E89B3C] transition-transform duration-300 group-hover:translate-y-0" />
               <span className="relative">Garantir minha vaga</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="relative transition-transform group-hover:translate-x-1"
-              >
-                <path
-                  d="M3 7H11M11 7L7 3M11 7L7 11"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <ArrowRight className="relative transition-transform group-hover:translate-x-1" />
             </a>
           </div>
 
@@ -448,22 +435,7 @@ export default function TurmaUberaba() {
             >
               <span className="absolute inset-0 -translate-y-full bg-[#FAF7F1] transition-transform duration-300 group-hover:translate-y-0" />
               <span className="relative">Inscrever-se agora</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="relative transition-transform group-hover:translate-x-1"
-              >
-                <path
-                  d="M3 7H11M11 7L7 3M11 7L7 11"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <ArrowRight className="relative transition-transform group-hover:translate-x-1" />
             </a>
           </div>
         </div>

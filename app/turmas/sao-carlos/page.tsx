@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import { ArrowRight } from "@/components/icons";
+
 export const metadata: Metadata = {
   title: "Terapias Manuais Modernas — São Carlos · 20, 21, 27 e 28 de Junho",
   description:
@@ -167,29 +169,12 @@ export default function TurmaSaoCarlos() {
             </p>
 
             <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#lotes"
               className="group relative inline-flex animate-[fadeUp_0.9s_ease_0.8s_both] items-center gap-3.5 overflow-hidden border border-[#1F4A33] bg-[#1F4A33] px-9 py-5 text-[15px] font-semibold tracking-[0.2em] text-[#FAF7F1] uppercase transition-colors hover:border-[#E89B3C]"
             >
               <span className="absolute inset-0 -translate-y-full bg-[#E89B3C] transition-transform duration-300 group-hover:translate-y-0" />
               <span className="relative">Garantir minha vaga</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="relative transition-transform group-hover:translate-x-1"
-              >
-                <path
-                  d="M3 7H11M11 7L7 3M11 7L7 11"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <ArrowRight className="relative transition-transform group-hover:translate-x-1" />
             </a>
           </div>
 
@@ -462,7 +447,7 @@ export default function TurmaSaoCarlos() {
       </section>
 
       {/* ====== INVESTIMENTO ====== */}
-      <section className="relative z-2 bg-[#1F4A33] text-[#FAF7F1]">
+      <section id="lotes" className="relative z-2 bg-[#1F4A33] text-[#FAF7F1]">
         <div
           className="absolute -top-32 right-0 h-64 w-64 opacity-15"
           style={{
@@ -473,7 +458,7 @@ export default function TurmaSaoCarlos() {
           <div className="mb-16 max-w-[720px]">
             <div className="mb-6 inline-flex items-center gap-3.5 text-[11px] font-semibold tracking-[0.3em] text-[#F4C690] uppercase">
               <span className="h-px w-8 bg-[#F4C690]" />
-              <span>Investimento · 5 lotes</span>
+              <span>Investimento · 20 vagas</span>
             </div>
             <h2
               className="text-[clamp(40px,5vw,64px)] leading-[1.05] tracking-[-0.02em] text-[#FAF7F1]"
@@ -486,15 +471,14 @@ export default function TurmaSaoCarlos() {
             </h2>
             <p className="mt-6 max-w-[560px] text-[14px] leading-[1.7] text-[#FAF7F1]/70">
               {loteAtualIndex === -1 ? (
-                <>Inscrições encerradas — turma cheia ou em andamento.</>
+                <>Inscrições encerradas — as 20 vagas foram preenchidas.</>
               ) : (
                 <>
-                  O preço sobe a cada semana. Lote vigente:{" "}
+                  O preço sobe a cada semana.{" "}
                   <span className="text-[#F4C690]">
-                    {LOTES[loteAtualIndex].nome}
+                    Cada lote tem vagas limitadas
                   </span>{" "}
-                  ({LOTES[loteAtualIndex].prazo}) — vagas limitadas a 20
-                  participantes.
+                  e pode encerrar antes do prazo.
                 </>
               )}
             </p>
@@ -576,17 +560,21 @@ export default function TurmaSaoCarlos() {
                   </div>
                   <div className="md:col-span-3 md:text-right">
                     {isAtual ? (
-                      <a
-                        href={WHATSAPP_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border border-[#E89B3C] bg-[#E89B3C] px-5 py-3 text-[12px] font-semibold tracking-[0.2em] text-[#1F4A33] uppercase transition-colors hover:bg-[#FAF7F1] hover:border-[#FAF7F1]"
+                      <form
+                        method="POST"
+                        action="/api/turmas/sao-carlos/comprar"
+                        className="inline"
                       >
-                        Quero esse lote →
-                      </a>
+                        <button
+                          type="submit"
+                          className="inline-flex items-center gap-2 border border-[#E89B3C] bg-[#E89B3C] px-5 py-3 text-[12px] font-semibold tracking-[0.2em] text-[#1F4A33] uppercase transition-colors hover:bg-[#FAF7F1] hover:border-[#FAF7F1]"
+                        >
+                          Quero esse lote →
+                        </button>
+                      </form>
                     ) : (
                       <span className="text-[11px] tracking-[0.2em] text-[#FAF7F1]/40 uppercase">
-                        {isEncerrado ? "Encerrado" : "Próximo"}
+                        {isEncerrado ? "Encerrado" : "Em breve"}
                       </span>
                     )}
                   </div>
@@ -627,7 +615,7 @@ export default function TurmaSaoCarlos() {
                 className="text-[16px] text-[#FAF7F1]"
                 style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
               >
-                Pix à vista. Parcelamento no cartão em breve.
+                PIX à vista ou cartão em até 12x. Confirmação imediata.
               </div>
             </div>
           </div>
@@ -648,35 +636,28 @@ export default function TurmaSaoCarlos() {
                 </em>
               </div>
               <p className="max-w-[520px] text-[14px] leading-[1.6] text-[#FAF7F1]/70">
-                Fala comigo direto no WhatsApp — eu te confirmo o lote vigente,
-                envio o link de pagamento e te adiciono no grupo da turma.
+                Pagamento via PIX ou cartão em até 12x. Confirmação imediata e
+                você entra no grupo da turma logo após o pagamento.
               </p>
             </div>
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative inline-flex shrink-0 items-center gap-3.5 overflow-hidden border border-[#E89B3C] bg-[#E89B3C] px-9 py-5 text-[15px] font-semibold tracking-[0.2em] text-[#1F4A33] uppercase"
-            >
-              <span className="absolute inset-0 -translate-y-full bg-[#FAF7F1] transition-transform duration-300 group-hover:translate-y-0" />
-              <span className="relative">Falar no WhatsApp</span>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="relative transition-transform group-hover:translate-x-1"
+            {loteAtualIndex !== -1 && (
+              <form
+                method="POST"
+                action="/api/turmas/sao-carlos/comprar"
+                className="inline-block shrink-0"
               >
-                <path
-                  d="M3 7H11M11 7L7 3M11 7L7 11"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </a>
+                <button
+                  type="submit"
+                  className="group relative inline-flex items-center gap-3.5 overflow-hidden border border-[#E89B3C] bg-[#E89B3C] px-9 py-5 text-[15px] font-semibold tracking-[0.2em] text-[#1F4A33] uppercase"
+                >
+                  <span className="absolute inset-0 -translate-y-full bg-[#FAF7F1] transition-transform duration-300 group-hover:translate-y-0" />
+                  <span className="relative">
+                    Inscrever-se · R$ {LOTES[loteAtualIndex].valor}
+                  </span>
+                  <ArrowRight className="relative transition-transform group-hover:translate-x-1" />
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </section>
