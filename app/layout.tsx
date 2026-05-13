@@ -32,6 +32,14 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${inter.variable} ${fraunces.variable}`}>
       <body className="antialiased">
+        {/* Roda síncrono ANTES do browser tentar pular pra âncora.
+         * Salva o hash, limpa da URL → smooth-scroll-on-hash recupera depois. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "(function(){var h=window.location.hash;if(h&&h.length>1){window.__pendingHash=h;window.history.replaceState(null,'',window.location.pathname+window.location.search);}})();",
+          }}
+        />
         {children}
         <WhatsAppFloating />
       </body>
