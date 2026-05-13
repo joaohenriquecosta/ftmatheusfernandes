@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { DevCredit } from "@/components/dev-credit";
 import { LockOutline } from "@/components/icons";
 
 type ApiResponse =
@@ -168,6 +169,8 @@ export default function PagamentoPage() {
         ) : (
           <LinkView step={step} onBack={resetToForm} />
         )}
+
+        <DevCredit />
       </div>
     </main>
   );
