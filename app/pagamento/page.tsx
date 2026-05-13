@@ -47,10 +47,22 @@ const FRAUNCES = "var(--font-fraunces), Georgia, serif";
 
 export default function PagamentoPage() {
   const [step, setStep] = useState<Step>({ kind: "form" });
-  const [valorCents, setValorCents] = useState(100);
+  const [valorCents, setValorCents] = useState(0);
   const [descricao, setDescricao] = useState("");
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [erroDescricao, setErroDescricao] = useState<string | null>(null);
+  const [erroValor, setErroValor] = useState<string | null>(null);
+  const descricaoRef = useRef<HTMLInputElement>(null);
+  const valorRef = useRef<HTMLInputElement>(null);
+
+  // Limpa erros inline assim que o usuário corrige o campo.
+  useEffect(() => {
+    if (erroDescricao && descricao.trim()) setErroDescricao(null);
+  }, [descricao, erroDescricao]);
+  useEffect(() => {
+    if (erroValor && valorCents >= 100) setErroValor(null);
+  }, [valorCents, erroValor]);
 
   function onValorChange(raw: string) {
     const digits = raw.replace(/\D/g, "").slice(0, 9);
@@ -61,14 +73,28 @@ export default function PagamentoPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErro(null);
+    setErroDescricao(null);
+    setErroValor(null);
 
-    if (valorCents < 100) {
-      setErro("Valor mínimo: R$ 1,00.");
-      return;
-    }
+    const valorInvalido = valorCents < 100;
     const description = descricao.trim();
-    if (!description) {
-      setErro("Informe uma descrição.");
+    const descricaoInvalida = !description;
+
+    if (valorInvalido) {
+      setErroValor("Valor mínimo: R$ 1,00.");
+    }
+    if (descricaoInvalida) {
+      setErroDescricao(
+        "Preencha a descrição da cobrança antes de gerar o link.",
+      );
+    }
+    if (valorInvalido || descricaoInvalida) {
+      // Foca o primeiro campo inválido (valor tem prioridade na ordem visual).
+      if (valorInvalido) {
+        valorRef.current?.focus();
+      } else {
+        descricaoRef.current?.focus();
+      }
       return;
     }
 
@@ -129,8 +155,12 @@ export default function PagamentoPage() {
           <ReceiptFormView
             valorCents={valorCents}
             onValorChange={onValorChange}
+            valorRef={valorRef}
+            erroValor={erroValor}
             descricao={descricao}
             setDescricao={setDescricao}
+            descricaoRef={descricaoRef}
+            erroDescricao={erroDescricao}
             erro={erro}
             loading={loading}
             onSubmit={onSubmit}
@@ -146,16 +176,24 @@ export default function PagamentoPage() {
 function ReceiptFormView({
   valorCents,
   onValorChange,
+  valorRef,
+  erroValor,
   descricao,
   setDescricao,
+  descricaoRef,
+  erroDescricao,
   erro,
   loading,
   onSubmit,
 }: {
   valorCents: number;
   onValorChange: (raw: string) => void;
+  valorRef: React.RefObject<HTMLInputElement | null>;
+  erroValor: string | null;
   descricao: string;
   setDescricao: (v: string) => void;
+  descricaoRef: React.RefObject<HTMLInputElement | null>;
+  erroDescricao: string | null;
   erro: string | null;
   loading: boolean;
   onSubmit: (e: React.FormEvent) => void;
@@ -176,11 +214,12 @@ function ReceiptFormView({
     );
   }, []);
 
-  const disabled = loading || valorCents < 100 || !descricao.trim();
+  const isInvalid = valorCents < 100 || !descricao.trim();
 
   return (
     <form
       onSubmit={onSubmit}
+      noValidate
       className="relative border border-[#1F4A33]/15 bg-[#F5F1E8] shadow-[0_2px_0_rgba(31,74,51,0.04),0_24px_60px_-30px_rgba(31,74,51,0.25)]"
     >
       {/* Top accent line */}
@@ -234,15 +273,31 @@ function ReceiptFormView({
         {/* Descrição row */}
         <Row label="Descrição">
           <input
+            ref={descricaoRef}
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
             required
             maxLength={140}
             disabled={loading}
+            aria-invalid={!!erroDescricao}
+            aria-describedby={erroDescricao ? "erro-descricao" : undefined}
             placeholder="Ex: avaliação fisioterapêutica · 1 sessão"
-            className="w-full min-w-0 border-0 border-b border-[#1F4A33]/15 bg-transparent pb-2 text-left text-[16px] text-[#1F4A33] placeholder:text-[#4A524C]/35 focus:border-[#1F4A33]/50 focus:outline-none disabled:opacity-50 sm:border-transparent sm:text-right sm:text-[17px]"
+            className={`w-full min-w-0 border-0 border-b bg-transparent pb-2 text-left text-[16px] text-[#1F4A33] placeholder:text-[#4A524C]/35 focus:outline-none disabled:opacity-50 sm:text-right sm:text-[17px] ${
+              erroDescricao
+                ? "border-red-400 focus:border-red-500"
+                : "border-[#1F4A33]/15 focus:border-[#1F4A33]/50 sm:border-transparent"
+            }`}
             style={{ fontFamily: FRAUNCES }}
           />
+          {erroDescricao && (
+            <div
+              id="erro-descricao"
+              role="alert"
+              className="mt-2 text-[12px] text-red-700 sm:text-right"
+            >
+              {erroDescricao}
+            </div>
+          )}
         </Row>
 
         <Divider />
@@ -252,23 +307,42 @@ function ReceiptFormView({
           <div className="text-[10px] font-semibold tracking-[0.28em] text-[#1F4A33] uppercase">
             Valor
           </div>
-          <div className="flex min-w-0 items-baseline justify-end gap-2 sm:gap-3">
-            <span
-              className="text-[18px] text-[#E89B3C]/90 sm:text-[22px]"
-              style={{ fontFamily: FRAUNCES }}
-            >
-              R$
-            </span>
-            <input
-              value={formatCentsPlain(valorCents)}
-              onChange={(e) => onValorChange(e.target.value)}
-              inputMode="decimal"
-              disabled={loading}
-              required
-              aria-label="Valor da cobrança"
-              className="min-w-0 flex-1 border-0 bg-transparent text-right text-[clamp(36px,11vw,72px)] leading-none tracking-[-0.02em] tabular-nums text-[#1F4A33] focus:outline-none disabled:opacity-50"
-              style={{ fontFamily: FRAUNCES }}
-            />
+          <div className="min-w-0">
+            <div className="flex items-baseline justify-end gap-2 sm:gap-3">
+              <span
+                className={`text-[18px] sm:text-[22px] ${
+                  erroValor ? "text-red-500" : "text-[#E89B3C]/90"
+                }`}
+                style={{ fontFamily: FRAUNCES }}
+              >
+                R$
+              </span>
+              <input
+                ref={valorRef}
+                value={valorCents === 0 ? "" : formatCentsPlain(valorCents)}
+                onChange={(e) => onValorChange(e.target.value)}
+                onFocus={(e) => e.target.select()}
+                inputMode="decimal"
+                disabled={loading}
+                placeholder="0,00"
+                aria-label="Valor da cobrança"
+                aria-invalid={!!erroValor}
+                aria-describedby={erroValor ? "erro-valor" : undefined}
+                className={`min-w-0 flex-1 border-0 bg-transparent text-right text-[clamp(36px,11vw,72px)] leading-none tracking-[-0.02em] tabular-nums placeholder:text-[#4A524C]/25 focus:outline-none disabled:opacity-50 ${
+                  erroValor ? "text-red-700" : "text-[#1F4A33]"
+                }`}
+                style={{ fontFamily: FRAUNCES }}
+              />
+            </div>
+            {erroValor && (
+              <div
+                id="erro-valor"
+                role="alert"
+                className="mt-2 text-right text-[12px] text-red-700"
+              >
+                {erroValor}
+              </div>
+            )}
           </div>
         </div>
 
@@ -288,10 +362,14 @@ function ReceiptFormView({
         {/* Submit */}
         <button
           type="submit"
-          disabled={disabled}
-          className="group relative mt-10 inline-flex w-full items-center justify-center gap-3 overflow-hidden border border-[#E89B3C] bg-[#E89B3C] px-6 py-5 text-[13px] font-semibold tracking-[0.24em] text-[#1F4A33] uppercase transition-colors hover:border-[#1F4A33] disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={loading}
+          className={`group relative mt-10 inline-flex w-full items-center justify-center gap-3 overflow-hidden border border-[#E89B3C] bg-[#E89B3C] px-6 py-5 text-[13px] font-semibold tracking-[0.24em] text-[#1F4A33] uppercase transition-colors disabled:cursor-wait disabled:opacity-50 ${
+            isInvalid ? "opacity-50" : "hover:border-[#1F4A33]"
+          }`}
         >
-          <span className="absolute inset-0 -translate-y-[calc(100%+1px)] bg-[#FAF7F1] transition-transform duration-300 group-hover:translate-y-0 group-disabled:-translate-y-[calc(100%+1px)]" />
+          {!isInvalid && (
+            <span className="absolute inset-0 -translate-y-[calc(100%+1px)] bg-[#FAF7F1] transition-transform duration-300 group-hover:translate-y-0 group-disabled:-translate-y-[calc(100%+1px)]" />
+          )}
           <LockOutline className="relative h-4 w-4" />
           <span className="relative">
             {loading ? "Gerando link…" : "Checkout seguro"}
