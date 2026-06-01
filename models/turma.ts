@@ -7,6 +7,11 @@ export type Lote = {
 
 export type Turma = {
   slug: string;
+  /**
+   * Turma aberta a vendas. Ausente = ativa (compatibilidade). Quando `false`,
+   * a turma está desmarcada (sem data prevista) e o checkout é bloqueado.
+   */
+  ativa?: boolean;
   nome: string;
   cidade: string;
   uf: string;
@@ -20,6 +25,9 @@ export type Turma = {
 const TURMAS: Record<string, Turma> = {
   "sao-carlos": {
     slug: "sao-carlos",
+    // Desmarcada — sem data prevista. Mantida aqui só pra facilitar a remarcação
+    // (reativar = `ativa: true` + atualizar datas/lotes).
+    ativa: false,
     nome: "Terapias Manuais Modernas — São Carlos",
     cidade: "São Carlos",
     uf: "SP",

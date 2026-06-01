@@ -18,6 +18,15 @@ export async function POST(
     );
   }
 
+  // Turma desmarcada/sem data prevista: bloqueia o checkout mesmo que algum
+  // link/QR antigo aponte pra cá.
+  if (turma.ativa === false) {
+    return NextResponse.json(
+      { error: "turma_inativa" },
+      { status: 410 },
+    );
+  }
+
   // Recalcula o lote vigente no momento do clique — defensivo contra cache da
   // página (revalidate=3600). Se o usuário cliquei perto da virada de lote, o
   // valor cobrado é o atual, não o que estava na UI.
