@@ -65,14 +65,14 @@ export default function Home() {
       {/* ====== HERO ====== */}
       <section className="relative z-2">
         <div className="mx-auto max-w-[1200px] px-6 pt-20 pb-24 md:px-12 md:pt-28 md:pb-32">
-          <div className="max-w-[760px]">
+          <div className="max-w-[920px]">
             <div className="mb-8 inline-flex animate-[fadeUp_0.8s_ease_0.2s_both] items-center gap-3.5 text-[11px] font-semibold tracking-[0.3em] text-[#E89B3C] uppercase">
               <span className="h-px w-8 bg-[#E89B3C]" />
               <span>Fisioterapeuta esportivo</span>
             </div>
 
             <h1
-              className="mb-8 animate-[fadeUp_0.9s_ease_0.4s_both] text-[clamp(44px,7vw,88px)] leading-[1.02] tracking-[-0.02em] text-[#1F4A33]"
+              className="mb-10 animate-[fadeUp_0.9s_ease_0.4s_both] text-[clamp(46px,7.5vw,96px)] leading-[1.02] tracking-[-0.02em] text-[#1F4A33]"
               style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
             >
               Fisioterapia esportiva,{" "}
@@ -91,7 +91,6 @@ export default function Home() {
               atualizada.
             </p>
 
-            {/* CTA */}
             <div className="flex animate-[fadeUp_0.9s_ease_0.8s_both] flex-col items-start gap-4 sm:flex-row sm:items-center">
               <a
                 href={WHATSAPP_AVALIACAO}
@@ -104,6 +103,34 @@ export default function Home() {
                 <ArrowRight className="relative transition-transform group-hover:translate-x-1" />
               </a>
             </div>
+          </div>
+
+          {/* Faixa de credenciais — ocupa a largura e ancora o hero */}
+          <div className="mt-20 grid animate-[fadeUp_1s_ease_1s_both] grid-cols-1 border-t border-[#1F4A33]/15 sm:grid-cols-3 md:mt-28">
+            {[
+              { k: "Atuação", v: "Fisioterapia esportiva · terapia manual" },
+              { k: "Atendimento", v: "São Carlos/SP · presencial" },
+              { k: "Registro", v: "CREFITO 3/321383-F" },
+            ].map((it, i) => (
+              <div
+                key={it.k}
+                className={`py-6 ${
+                  i === 0
+                    ? "sm:pr-8"
+                    : "border-t border-[#1F4A33]/15 sm:border-t-0 sm:border-l sm:border-[#1F4A33]/15 sm:px-8"
+                }`}
+              >
+                <div className="mb-2 text-[10px] font-semibold tracking-[0.24em] text-[#E89B3C] uppercase">
+                  {it.k}
+                </div>
+                <div
+                  className="text-[15px] leading-[1.4] text-[#1F4A33]"
+                  style={{ fontFamily: "var(--font-fraunces), Georgia, serif" }}
+                >
+                  {it.v}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
