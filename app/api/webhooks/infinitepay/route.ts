@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import * as infinitepay from "@/models/infinitepay";
+import * as notify from "@/models/notify";
 import * as order from "@/models/order";
 import * as payment from "@/models/payment";
 
@@ -23,6 +24,9 @@ export async function POST(request: NextRequest) {
     console.warn("[webhook:infinitepay] unknown order", webhook.order_nsu);
     return new NextResponse("ok", { status: 200 });
   }
+  if (existing.status === "paid") {
+    return new NextResponse("ok", { status: 200 }); // idempotente
+  }
 
   try {
     const status = await payment.verify({
@@ -36,12 +40,13 @@ export async function POST(request: NextRequest) {
       return new NextResponse("ok", { status: 200 });
     }
 
-    await order.markPaid(webhook.order_nsu, {
+    const paid = await order.markPaid(webhook.order_nsu, {
       transactionId: webhook.transaction_nsu,
       paidAmountCents: status.paidAmountCents,
       method: status.method,
       receiptUrl: webhook.receipt_url,
     });
+    if (paid) await notify.orderEvent("paid", paid);
 
     return new NextResponse("ok", { status: 200 });
   } catch (err) {

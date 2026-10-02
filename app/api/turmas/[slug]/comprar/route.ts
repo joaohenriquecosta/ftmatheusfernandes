@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+import * as notify from "@/models/notify";
 import * as orderModel from "@/models/order";
 import * as paymentModel from "@/models/payment";
 import * as turmaModel from "@/models/turma";
@@ -73,6 +74,7 @@ export async function POST(
       customer,
     });
     await orderModel.attachProviderSlug(order.id, link.providerSlug);
+    await notify.orderEvent("clicked", order);
     return NextResponse.redirect(link.url, 303);
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown_error";

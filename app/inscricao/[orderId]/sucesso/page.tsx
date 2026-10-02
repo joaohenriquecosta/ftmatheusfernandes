@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import * as notify from "@/models/notify";
 import * as order from "@/models/order";
 import * as payment from "@/models/payment";
 
@@ -30,12 +31,13 @@ async function attemptVerifyFromQuery(orderId: string, search: Awaited<Search>) 
   try {
     const status = await payment.verify({ orderId, transactionId, slug });
     if (status.paid) {
-      await order.markPaid(orderId, {
+      const paid = await order.markPaid(orderId, {
         transactionId,
         paidAmountCents: status.paidAmountCents,
         method: status.method,
         receiptUrl,
       });
+      if (paid) await notify.orderEvent("paid", paid);
     }
   } catch (err) {
     console.error(
