@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     return new NextResponse("bad payload", { status: 400 });
   }
 
-  const existing = order.get(webhook.order_nsu);
+  const existing = await order.get(webhook.order_nsu);
   if (!existing) {
     console.warn("[webhook:infinitepay] unknown order", webhook.order_nsu);
     return new NextResponse("ok", { status: 200 });
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       return new NextResponse("ok", { status: 200 });
     }
 
-    order.markPaid(webhook.order_nsu, {
+    await order.markPaid(webhook.order_nsu, {
       transactionId: webhook.transaction_nsu,
       paidAmountCents: status.paidAmountCents,
       method: status.method,

@@ -86,6 +86,24 @@ const TURMAS: Record<string, Turma> = {
       },
     ],
   },
+  "dry-needling": {
+    slug: "dry-needling",
+    nome: "Curso de Dry Needling — São Carlos",
+    cidade: "São Carlos",
+    uf: "SP",
+    local: "Clínica Aviven · Centro",
+    datas: "14 e 15 de Novembro de 2026",
+    cargaHoraria: "20h",
+    vagas: 0, // vagas limitadas, número não divulgado
+    lotes: [
+      {
+        nome: "Inscrição",
+        prazo: "até o início do curso",
+        valorCents: 50000,
+        endsAt: "2026-11-14T08:00:00-03:00",
+      },
+    ],
+  },
 };
 
 export function get(slug: string): Turma | undefined {

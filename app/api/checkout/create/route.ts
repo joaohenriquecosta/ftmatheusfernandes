@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const created = order.create({
+  const created = await order.create({
     amountCents,
     description,
     customerName: body.customerName,
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         phone: body.customerPhone,
       },
     });
-    order.attachProviderSlug(created.id, link.providerSlug);
+    await order.attachProviderSlug(created.id, link.providerSlug);
     return NextResponse.json({
       orderId: created.id,
       checkoutUrl: link.url,

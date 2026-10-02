@@ -5,7 +5,7 @@ import * as paymentModel from "@/models/payment";
 import * as turmaModel from "@/models/turma";
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   ctx: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await ctx.params;
@@ -40,10 +40,29 @@ export async function POST(
 
   const description = `${turma.nome} · ${lote.nome}`;
 
-  const order = orderModel.create({
+  // Página intermediária (/turmas/[slug]/inscricao) manda nome/email/whats.
+  // Botões antigos sem form continuam funcionando (campos vazios).
+  const form = await req.formData().catch(() => null);
+  const field = (k: string) => {
+    const v = form?.get(k);
+    return typeof v === "string" && v.trim() ? v.trim().slice(0, 140) : undefined;
+  };
+  const customer = {
+    name: field("nome"),
+    email: field("email"),
+    phone: field("whatsapp")?.replace(/\D/g, ""),
+  };
+  if (form && (!customer.name || !customer.email || !customer.phone)) {
+    return NextResponse.json({ error: "missing_fields" }, { status: 400 });
+  }
+
+  const order = await orderModel.create({
     amountCents: lote.valorCents,
     description,
     context: `turma:${slug}`,
+    customerName: customer.name,
+    customerEmail: customer.email,
+    customerPhone: customer.phone,
   });
 
   try {
@@ -51,8 +70,9 @@ export async function POST(
       orderId: order.id,
       amountCents: lote.valorCents,
       description,
+      customer,
     });
-    orderModel.attachProviderSlug(order.id, link.providerSlug);
+    await orderModel.attachProviderSlug(order.id, link.providerSlug);
     return NextResponse.redirect(link.url, 303);
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown_error";

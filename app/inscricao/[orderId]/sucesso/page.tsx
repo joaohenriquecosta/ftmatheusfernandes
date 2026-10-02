@@ -24,13 +24,13 @@ async function attemptVerifyFromQuery(orderId: string, search: Awaited<Search>) 
   const receiptUrl = pickFirst(search.receipt_url);
   if (!transactionId || !slug) return;
 
-  const found = order.get(orderId);
+  const found = await order.get(orderId);
   if (!found || found.status === "paid") return;
 
   try {
     const status = await payment.verify({ orderId, transactionId, slug });
     if (status.paid) {
-      order.markPaid(orderId, {
+      await order.markPaid(orderId, {
         transactionId,
         paidAmountCents: status.paidAmountCents,
         method: status.method,
@@ -56,7 +56,7 @@ export default async function SucessoPage({
 
   await attemptVerifyFromQuery(orderId, search);
 
-  const found = order.get(orderId);
+  const found = await order.get(orderId);
   if (!found) notFound();
 
   const paid = found.status === "paid";
