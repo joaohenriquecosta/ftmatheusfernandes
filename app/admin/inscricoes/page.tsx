@@ -46,7 +46,7 @@ export default async function InscricoesPage({
         <table className="w-full border-collapse text-left">
           <thead>
             <tr className="border-b border-[#1F4A33]/30 text-[10px] tracking-[0.2em] text-[#4A524C] uppercase">
-              {["Criado", "Status", "Nome", "E-mail", "WhatsApp", "Valor", "Método", "Pago em", "Curso", "Pedido"].map((h) => (
+              {["Criado", "Status", "Nome", "E-mail", "WhatsApp", "Valor", "Saldo", "Método", "Pago em", "Curso", "Pedido"].map((h) => (
                 <th key={h} className="py-2 pr-4 font-semibold">{h}</th>
               ))}
             </tr>
@@ -62,6 +62,11 @@ export default async function InscricoesPage({
                 <td className="py-2 pr-4">{o.customerEmail ?? "—"}</td>
                 <td className="py-2 pr-4 whitespace-nowrap">{o.customerPhone ?? "—"}</td>
                 <td className="py-2 pr-4 whitespace-nowrap">{brl(o.paidAmountCents ?? o.amountCents)}</td>
+                <td className={`py-2 pr-4 whitespace-nowrap ${order.balanceCents(o) ? "font-semibold text-red-700" : ""}`}>
+                  {order.balanceCents(o)
+                    ? `${brl(order.balanceCents(o))} até ${dt(o.balanceDueAt).split(",")[0]}`
+                    : "—"}
+                </td>
                 <td className="py-2 pr-4">{o.paymentMethod ?? "—"}</td>
                 <td className="py-2 pr-4 whitespace-nowrap">{dt(o.paidAt)}</td>
                 <td className="py-2 pr-4">{o.context ?? "—"}</td>

@@ -118,3 +118,22 @@ export function getLoteVigente(turma: Turma, now: Date = new Date()): Lote | und
   const ts = now.getTime();
   return turma.lotes.find((l) => new Date(l.endsAt).getTime() > ts);
 }
+
+// Cupom METADE: paga 50% agora (até 31/10), saldo até o início do curso.
+const METADE_ATE = "2026-10-31T23:59:59-03:00";
+
+export type Cupom = { code: string; valorCents: number; balanceDueAt: string };
+
+/** Retorna o valor a cobrar com o cupom, ou null se inválido/expirado. */
+export function aplicarCupom(
+  turma: Turma,
+  lote: Lote,
+  code: string,
+  now: Date = new Date(),
+): Cupom | null {
+  const c = code.trim().toUpperCase();
+  if (c !== "METADE" || now.getTime() > new Date(METADE_ATE).getTime()) return null;
+  // ponytail: início do curso = endsAt do último lote; criar campo `inicio` se divergir.
+  const inicio = turma.lotes[turma.lotes.length - 1].endsAt;
+  return { code: c, valorCents: Math.ceil(lote.valorCents / 2), balanceDueAt: inicio };
+}

@@ -80,7 +80,7 @@ function html(
 
   const headline =
     kind === "paid"
-      ? `<strong style="color:#15803d">${esc(o.customerName)}</strong> pagou ${brl(o.paidAmountCents ?? o.amountCents)}${o.paymentMethod ? ` via ${esc(o.paymentMethod)}` : ""}.`
+      ? `<strong style="color:#15803d">${esc(o.customerName)}</strong> pagou ${brl(o.paidAmountCents ?? o.amountCents)}${o.paymentMethod ? ` via ${esc(o.paymentMethod)}` : ""}.${order.balanceCents(o) ? ` <strong style="color:#b91c1c">Cupom ${esc(o.coupon)}: falta ${brl(order.balanceCents(o))}.</strong>` : ""}`
       : `<strong>${esc(o.customerName)}</strong> preencheu a inscrição e foi pro checkout (${brl(o.amountCents)}). Ainda não pagou.`;
 
   return `<div style="font-family:Inter,Arial,sans-serif;color:#1A1F1B;max-width:720px;margin:0 auto;padding:24px">

@@ -39,8 +39,6 @@ export async function POST(
     );
   }
 
-  const description = `${turma.nome} · ${lote.nome}`;
-
   // Página intermediária (/turmas/[slug]/inscricao) manda nome/email/whats.
   // Botões antigos sem form continuam funcionando (campos vazios).
   const form = await req.formData().catch(() => null);
@@ -57,10 +55,24 @@ export async function POST(
     return NextResponse.json({ error: "missing_fields" }, { status: 400 });
   }
 
+  const cupomCode = field("cupom");
+  const cupom = cupomCode ? turmaModel.aplicarCupom(turma, lote, cupomCode) : null;
+  if (cupomCode && !cupom) {
+    return NextResponse.redirect(
+      new URL(`/turmas/${slug}/inscricao?erro=cupom`, req.url),
+      303,
+    );
+  }
+  const amountCents = cupom?.valorCents ?? lote.valorCents;
+  const description = `${turma.nome} · ${lote.nome}${cupom ? " · 50% (sinal)" : ""}`;
+
   const order = await orderModel.create({
-    amountCents: lote.valorCents,
+    amountCents,
     description,
     context: `turma:${slug}`,
+    coupon: cupom?.code,
+    fullAmountCents: cupom ? lote.valorCents : undefined,
+    balanceDueAt: cupom?.balanceDueAt,
     customerName: customer.name,
     customerEmail: customer.email,
     customerPhone: customer.phone,
@@ -69,7 +81,7 @@ export async function POST(
   try {
     const link = await paymentModel.create({
       orderId: order.id,
-      amountCents: lote.valorCents,
+      amountCents,
       description,
       customer,
     });

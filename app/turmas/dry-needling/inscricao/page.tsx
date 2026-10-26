@@ -14,7 +14,12 @@ export const metadata: Metadata = {
 const FRAUNCES = "var(--font-fraunces), Georgia, serif";
 const SLUG = "dry-needling";
 
-export default function InscricaoPage() {
+export default async function InscricaoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ erro?: string }>;
+}) {
+  const { erro } = await searchParams;
   const turma = turmaModel.get(SLUG);
   const lote = turma && turmaModel.getLoteVigente(turma);
   if (!turma || !lote) notFound();
@@ -77,6 +82,20 @@ export default function InscricaoPage() {
                 placeholder="(16) 99999-9999"
                 pattern="[\d\s()+-]{10,20}"
               />
+              <Field
+                label="Cupom (opcional)"
+                name="cupom"
+                required={false}
+                autoComplete="off"
+                placeholder="METADE = 50% agora, resto até o curso"
+                aria-invalid={erro === "cupom" || undefined}
+                aria-describedby={erro === "cupom" ? "cupom-erro" : undefined}
+              />
+              {erro === "cupom" && (
+                <p id="cupom-erro" role="alert" className="-mt-4 text-[12px] text-red-700">
+                  Cupom inválido ou expirado.
+                </p>
+              )}
             </div>
 
             <button

@@ -19,6 +19,12 @@ export type Order = {
   paidAmountCents?: number;
   paymentMethod?: string;
   receiptUrl?: string;
+  /** Cupom aplicado (ex.: METADE). */
+  coupon?: string;
+  /** Preço cheio do curso. Se > amountCents, o pedido é um sinal e falta saldo. */
+  fullAmountCents?: number;
+  /** Prazo para quitar o saldo (início do curso). */
+  balanceDueAt?: string;
 };
 
 // Persistência: Neon Postgres quando DATABASE_URL existe; senão Map em memória
@@ -52,7 +58,12 @@ function ensureSchema(): Promise<unknown> {
       paid_amount_cents integer,
       payment_method text,
       receipt_url text
-    )`;
+    )`.then(
+    () => sql`ALTER TABLE orders
+      ADD COLUMN IF NOT EXISTS coupon text,
+      ADD COLUMN IF NOT EXISTS full_amount_cents integer,
+      ADD COLUMN IF NOT EXISTS balance_due_at timestamptz`,
+  );
   return globalForStore.__ftmf_order_schema;
 }
 
@@ -78,6 +89,10 @@ function fromRow(r: Row): Order {
       r.paid_amount_cents == null ? undefined : Number(r.paid_amount_cents),
     paymentMethod: s(r.payment_method),
     receiptUrl: s(r.receipt_url),
+    coupon: s(r.coupon),
+    fullAmountCents:
+      r.full_amount_cents == null ? undefined : Number(r.full_amount_cents),
+    balanceDueAt: d(r.balance_due_at),
   };
 }
 
@@ -88,6 +103,9 @@ export type CreateOrderInput = {
   customerEmail?: string;
   customerPhone?: string;
   context?: string;
+  coupon?: string;
+  fullAmountCents?: number;
+  balanceDueAt?: string;
 };
 
 export async function create(input: CreateOrderInput): Promise<Order> {
@@ -101,11 +119,14 @@ export async function create(input: CreateOrderInput): Promise<Order> {
     customerEmail: input.customerEmail,
     customerPhone: input.customerPhone,
     context: input.context,
+    coupon: input.coupon,
+    fullAmountCents: input.fullAmountCents,
+    balanceDueAt: input.balanceDueAt,
   };
   if (sql) {
     await ensureSchema();
-    await sql`INSERT INTO orders (id, amount_cents, description, status, created_at, customer_name, customer_email, customer_phone, context)
-      VALUES (${order.id}, ${order.amountCents}, ${order.description}, 'pending', ${order.createdAt}, ${order.customerName ?? null}, ${order.customerEmail ?? null}, ${order.customerPhone ?? null}, ${order.context ?? null})`;
+    await sql`INSERT INTO orders (id, amount_cents, description, status, created_at, customer_name, customer_email, customer_phone, context, coupon, full_amount_cents, balance_due_at)
+      VALUES (${order.id}, ${order.amountCents}, ${order.description}, 'pending', ${order.createdAt}, ${order.customerName ?? null}, ${order.customerEmail ?? null}, ${order.customerPhone ?? null}, ${order.context ?? null}, ${order.coupon ?? null}, ${order.fullAmountCents ?? null}, ${order.balanceDueAt ?? null})`;
   } else {
     mem.set(order.id, order);
   }
@@ -129,6 +150,13 @@ export async function list(context?: string): Promise<Order[]> {
     ? await sql`SELECT * FROM orders WHERE context = ${context} ORDER BY created_at DESC`
     : await sql`SELECT * FROM orders ORDER BY created_at DESC`) as Row[];
   return rows.map(fromRow);
+}
+
+/** Saldo devedor em centavos (0 = quitado / sem sinal). */
+export function balanceCents(o: Order): number {
+  // Só quem pagou o sinal deve saldo. amountCents (não paidAmountCents, que inclui juros).
+  if (!o.fullAmountCents || o.status !== "paid") return 0;
+  return Math.max(0, o.fullAmountCents - o.amountCents);
 }
 
 export async function attachProviderSlug(
