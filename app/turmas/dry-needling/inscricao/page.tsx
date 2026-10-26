@@ -87,7 +87,6 @@ export default async function InscricaoPage({
                 name="cupom"
                 required={false}
                 autoComplete="off"
-                placeholder="METADE = 50% agora, resto até o curso"
                 aria-invalid={erro === "cupom" || undefined}
                 aria-describedby={erro === "cupom" ? "cupom-erro" : undefined}
               />
