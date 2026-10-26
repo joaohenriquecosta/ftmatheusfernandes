@@ -25,6 +25,10 @@ export type Order = {
   fullAmountCents?: number;
   /** Prazo para quitar o saldo (início do curso). */
   balanceDueAt?: string;
+  /** Quando o saldo foi quitado (pedido-filho pago). */
+  balancePaidAt?: string;
+  /** Pedido-filho de saldo: aponta pro pedido do sinal. */
+  parentId?: string;
 };
 
 // Persistência: Neon Postgres quando DATABASE_URL existe; senão Map em memória
@@ -62,7 +66,9 @@ function ensureSchema(): Promise<unknown> {
     () => sql`ALTER TABLE orders
       ADD COLUMN IF NOT EXISTS coupon text,
       ADD COLUMN IF NOT EXISTS full_amount_cents integer,
-      ADD COLUMN IF NOT EXISTS balance_due_at timestamptz`,
+      ADD COLUMN IF NOT EXISTS balance_due_at timestamptz,
+      ADD COLUMN IF NOT EXISTS balance_paid_at timestamptz,
+      ADD COLUMN IF NOT EXISTS parent_id text`,
   );
   return globalForStore.__ftmf_order_schema;
 }
@@ -93,6 +99,8 @@ function fromRow(r: Row): Order {
     fullAmountCents:
       r.full_amount_cents == null ? undefined : Number(r.full_amount_cents),
     balanceDueAt: d(r.balance_due_at),
+    balancePaidAt: d(r.balance_paid_at),
+    parentId: s(r.parent_id),
   };
 }
 
@@ -106,6 +114,7 @@ export type CreateOrderInput = {
   coupon?: string;
   fullAmountCents?: number;
   balanceDueAt?: string;
+  parentId?: string;
 };
 
 export async function create(input: CreateOrderInput): Promise<Order> {
@@ -122,11 +131,12 @@ export async function create(input: CreateOrderInput): Promise<Order> {
     coupon: input.coupon,
     fullAmountCents: input.fullAmountCents,
     balanceDueAt: input.balanceDueAt,
+    parentId: input.parentId,
   };
   if (sql) {
     await ensureSchema();
-    await sql`INSERT INTO orders (id, amount_cents, description, status, created_at, customer_name, customer_email, customer_phone, context, coupon, full_amount_cents, balance_due_at)
-      VALUES (${order.id}, ${order.amountCents}, ${order.description}, 'pending', ${order.createdAt}, ${order.customerName ?? null}, ${order.customerEmail ?? null}, ${order.customerPhone ?? null}, ${order.context ?? null}, ${order.coupon ?? null}, ${order.fullAmountCents ?? null}, ${order.balanceDueAt ?? null})`;
+    await sql`INSERT INTO orders (id, amount_cents, description, status, created_at, customer_name, customer_email, customer_phone, context, coupon, full_amount_cents, balance_due_at, parent_id)
+      VALUES (${order.id}, ${order.amountCents}, ${order.description}, 'pending', ${order.createdAt}, ${order.customerName ?? null}, ${order.customerEmail ?? null}, ${order.customerPhone ?? null}, ${order.context ?? null}, ${order.coupon ?? null}, ${order.fullAmountCents ?? null}, ${order.balanceDueAt ?? null}, ${order.parentId ?? null})`;
   } else {
     mem.set(order.id, order);
   }
@@ -155,7 +165,7 @@ export async function list(context?: string): Promise<Order[]> {
 /** Saldo devedor em centavos (0 = quitado / sem sinal). */
 export function balanceCents(o: Order): number {
   // Só quem pagou o sinal deve saldo. amountCents (não paidAmountCents, que inclui juros).
-  if (!o.fullAmountCents || o.status !== "paid") return 0;
+  if (!o.fullAmountCents || o.status !== "paid" || o.balancePaidAt) return 0;
   return Math.max(0, o.fullAmountCents - o.amountCents);
 }
 
@@ -178,6 +188,7 @@ export type MarkPaidInput = {
   receiptUrl?: string;
 };
 
+/** Retorna o pedido só pra quem efetivamente o marcou como pago (evita e-mail duplicado). */
 export async function markPaid(
   id: string,
   input: MarkPaidInput,
@@ -186,7 +197,7 @@ export async function markPaid(
   console.log("[order:paid]", id, input.paidAmountCents, input.method);
   if (!sql) {
     const o = mem.get(id);
-    if (!o) return undefined;
+    if (!o || o.status === "paid") return undefined;
     Object.assign(o, {
       status: "paid",
       paidAt,
@@ -195,11 +206,17 @@ export async function markPaid(
       paymentMethod: input.method,
       receiptUrl: input.receiptUrl,
     });
+    const parent = o.parentId && mem.get(o.parentId);
+    if (parent) parent.balancePaidAt = paidAt;
     return o;
   }
   const rows = (await sql`UPDATE orders SET status = 'paid', paid_at = ${paidAt},
       provider_transaction_id = ${input.transactionId}, paid_amount_cents = ${input.paidAmountCents},
       payment_method = ${input.method ?? null}, receipt_url = ${input.receiptUrl ?? null}
-    WHERE id = ${id} RETURNING *`) as Row[];
-  return rows[0] ? fromRow(rows[0]) : undefined;
+    WHERE id = ${id} AND status <> 'paid' RETURNING *`) as Row[];
+  const o = rows[0] ? fromRow(rows[0]) : undefined;
+  if (o?.parentId) {
+    await sql`UPDATE orders SET balance_paid_at = ${paidAt} WHERE id = ${o.parentId}`;
+  }
+  return o;
 }

@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       method: status.method,
       receiptUrl: webhook.receipt_url,
     });
-    if (paid) await notify.orderEvent("paid", paid);
+    if (paid) await Promise.all([notify.orderEvent("paid", paid), notify.customerPaid(paid)]);
 
     return new NextResponse("ok", { status: 200 });
   } catch (err) {

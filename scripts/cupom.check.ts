@@ -13,3 +13,9 @@ assert.equal(o.balanceCents(ord), 0);
 await o.markPaid(ord.id, { transactionId: "t", paidAmountCents: 27000 }); // c/ juros
 assert.equal(o.balanceCents((await o.get(ord.id))!), 25000);
 console.log("ok saldo");
+// saldo quitado via pedido-filho + markPaid idempotente
+const filho = await o.create({ amountCents: 25000, description: "y", parentId: ord.id });
+assert.ok(await o.markPaid(filho.id, { transactionId: "t2", paidAmountCents: 25000 }));
+assert.equal(await o.markPaid(filho.id, { transactionId: "t2", paidAmountCents: 25000 }), undefined);
+assert.equal(o.balanceCents((await o.get(ord.id))!), 0);
+console.log("ok quitado");

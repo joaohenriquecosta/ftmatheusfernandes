@@ -1,7 +1,9 @@
 import { Resend } from "resend";
 
 import type { Order } from "@/models/order";
+import { resolveBaseUrl } from "@/models/infinitepay";
 import * as order from "@/models/order";
+import * as turmaModel from "@/models/turma";
 
 // E-mail pro Matheus a cada evento (clique no checkout / pagamento confirmado)
 // com a lista atualizada de inscritos da turma. Falha silenciosa: notificação
@@ -33,7 +35,8 @@ export async function orderEvent(
   if (!key || TO.length === 0 || !o.context) return;
   try {
     const all = await order.list(o.context);
-    const paid = all.filter((x) => x.status === "paid");
+    // Pedido de saldo (parentId) entra no total recebido, mas não conta como inscrito.
+    const paid = all.filter((x) => x.status === "paid" && !x.parentId);
     const total = paid.reduce((s, x) => s + (x.paidAmountCents ?? x.amountCents), 0);
     const curso = o.description.split(" · ")[0];
 
@@ -50,6 +53,51 @@ export async function orderEvent(
     });
   } catch (err) {
     console.error("[notify] failed", err instanceof Error ? err.message : err);
+  }
+}
+
+// E-mail pro aluno: inscrição confirmada (+ link do restante se pagou só o sinal)
+// ou restante recebido. Mesma regra: falha silenciosa.
+export async function customerPaid(o: Order): Promise<void> {
+  const key = process.env.RESEND_API_KEY;
+  if (!key || !o.customerEmail) return;
+  try {
+    const t = o.context?.startsWith("turma:")
+      ? turmaModel.get(o.context.slice(6))
+      : undefined;
+    const curso = t?.nome ?? o.description.split(" · ")[0];
+    const nome = esc(o.customerName?.split(" ")[0] ?? "");
+    const saldo = order.balanceCents(o);
+    const dia = (iso?: string) =>
+      iso ? new Date(iso).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "";
+
+    const corpo = o.parentId
+      ? `<p>Recebemos o pagamento do restante (${brl(o.amountCents)}). Sua inscrição está <strong>quitada</strong>. Até o curso!</p>`
+      : `<p>Sua inscrição no <strong>${esc(curso)}</strong> está confirmada. Recebemos ${brl(o.amountCents)}.</p>
+        ${t ? `<p style="color:#4A524C">📅 ${esc(t.datas)}<br>📍 ${esc(t.local)} · ${esc(t.cidade)}/${esc(t.uf)}</p>` : ""}
+        ${saldo ? `<div style="border:1px solid #E89B3C;padding:16px;margin:20px 0">
+          <p style="margin:0 0 12px">Você usou o cupom <strong>${esc(o.coupon)}</strong> e pagou 50%. Falta <strong>${brl(saldo)}</strong>, a pagar até <strong>${dia(o.balanceDueAt)}</strong>.</p>
+          <a href="${resolveBaseUrl()}/api/pedidos/${o.id}/saldo" style="display:inline-block;background:#E89B3C;color:#1F4A33;padding:12px 20px;font-weight:600;text-decoration:none;letter-spacing:.1em;text-transform:uppercase;font-size:13px">Pagar restante</a>
+          <p style="margin:12px 0 0;font-size:12px;color:#4A524C">Pix ou cartão. Guarde este e-mail: o link vale até a quitação.</p>
+        </div>` : ""}
+        <p>Em breve você será adicionado ao grupo da turma no WhatsApp.</p>`;
+
+    await new Resend(key).emails.send({
+      from: FROM,
+      to: o.customerEmail,
+      replyTo: TO[0],
+      subject: o.parentId
+        ? `Pagamento recebido — ${curso}`
+        : `Inscrição confirmada — ${curso}${saldo ? " (falta o restante)" : ""}`,
+      html: `<div style="font-family:Inter,Arial,sans-serif;color:#1A1F1B;max-width:560px;margin:0 auto;padding:24px;line-height:1.55;font-size:15px">
+        <div style="border-top:3px solid #1F4A33;padding-top:16px">
+          <p style="font-size:18px">Olá${nome ? `, ${nome}` : ""}!</p>
+          ${corpo}
+          <p style="font-size:12px;color:#4A524C;margin-top:24px">Matheus Fernandes · Pedido ${o.id.slice(0, 8)}</p>
+        </div></div>`,
+    });
+  } catch (err) {
+    console.error("[notify:customer] failed", err instanceof Error ? err.message : err);
   }
 }
 

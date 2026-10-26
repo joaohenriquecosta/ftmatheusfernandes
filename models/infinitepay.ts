@@ -10,7 +10,7 @@ type Config = {
   baseUrl: string;
 };
 
-function resolveBaseUrl(): string {
+export function resolveBaseUrl(): string {
   // Em ordem de prioridade:
   // 1. Variável explícita (sempre vence — usada em dev e overrides)
   // 2. Domínio de produção do Vercel (custom domain, ex.: ftmatheusfernandes.com.br)

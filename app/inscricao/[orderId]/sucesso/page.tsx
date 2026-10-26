@@ -37,7 +37,7 @@ async function attemptVerifyFromQuery(orderId: string, search: Awaited<Search>) 
         method: status.method,
         receiptUrl,
       });
-      if (paid) await notify.orderEvent("paid", paid);
+      if (paid) await Promise.all([notify.orderEvent("paid", paid), notify.customerPaid(paid)]);
     }
   } catch (err) {
     console.error(

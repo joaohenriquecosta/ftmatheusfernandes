@@ -28,6 +28,7 @@ export default async function InscricoesPage({
 
   const rows = await order.list(turma ? `turma:${turma}` : undefined);
   const paid = rows.filter((o) => o.status === "paid");
+  const inscritos = paid.filter((o) => !o.parentId).length;
   const brl = (c: number) =>
     (c / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const dt = (iso?: string) =>
@@ -39,7 +40,7 @@ export default async function InscricoesPage({
         Inscrições {turma ? `· ${turma}` : ""}
       </h1>
       <p className="mb-8 text-[#4A524C]">
-        {rows.length} cliques · {paid.length} pagos ·{" "}
+        {rows.length} cliques · {inscritos} pagos ·{" "}
         {brl(paid.reduce((s, o) => s + (o.paidAmountCents ?? 0), 0))}
       </p>
       <div className="overflow-x-auto">
@@ -56,7 +57,7 @@ export default async function InscricoesPage({
               <tr key={o.id} className="border-b border-[#1F4A33]/10 align-top">
                 <td className="py-2 pr-4 whitespace-nowrap">{dt(o.createdAt)}</td>
                 <td className={`py-2 pr-4 font-semibold ${o.status === "paid" ? "text-green-700" : "text-[#E89B3C]"}`}>
-                  {o.status}
+                  {o.parentId ? `${o.status} · restante` : o.status}
                 </td>
                 <td className="py-2 pr-4">{o.customerName ?? "—"}</td>
                 <td className="py-2 pr-4">{o.customerEmail ?? "—"}</td>
