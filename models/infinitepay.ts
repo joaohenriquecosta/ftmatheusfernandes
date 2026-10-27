@@ -80,17 +80,27 @@ export async function createLink(
     body.customer = {
       name: req.customer.name,
       email: req.customer.email,
-      phone_number: req.customer.phone,
+      phone_number: normalizePhone(req.customer.phone),
     };
   }
 
-  const res = await fetch(`${cfg.apiUrl}/links`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  const post = (b: LinkRequestBody) =>
+    fetch(`${cfg.apiUrl}/links`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(b),
+    });
 
-  const raw = await res.text();
+  let res = await post(body);
+  let raw = await res.text();
+  // Customer é só pré-preenchimento do checkout. Se a InfinitePay recusar
+  // (telefone/nome inválido), gera o link sem ele em vez de travar a venda.
+  if (res.status === 422 && body.customer && raw.includes('"customer"')) {
+    console.warn("[infinitepay] customer rejected, retrying without it", raw.slice(0, 200));
+    delete body.customer;
+    res = await post(body);
+    raw = await res.text();
+  }
   if (!res.ok) {
     throw new Error(
       `InfinitePay /links failed (${res.status}): ${raw.slice(0, 500)}`,
@@ -176,4 +186,11 @@ export function parseWebhook(payload: unknown): WebhookPayload | null {
     return null;
   }
   return p as unknown as WebhookPayload;
+}
+
+/** Celular BR digitado sem o 9 (DDD + 8 dígitos começando em 6–9) → insere o 9. */
+export function normalizePhone(phone?: string): string | undefined {
+  const d = phone?.replace(/\D/g, "").replace(/^55(?=\d{10,11}$)/, "");
+  if (d && /^\d{2}[6-9]\d{7}$/.test(d)) return `${d.slice(0, 2)}9${d.slice(2)}`;
+  return d || undefined;
 }

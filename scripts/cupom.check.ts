@@ -19,3 +19,9 @@ assert.ok(await o.markPaid(filho.id, { transactionId: "t2", paidAmountCents: 250
 assert.equal(await o.markPaid(filho.id, { transactionId: "t2", paidAmountCents: 25000 }), undefined);
 assert.equal(o.balanceCents((await o.get(ord.id))!), 0);
 console.log("ok quitado");
+const ip = await import("../models/infinitepay.ts");
+assert.equal(ip.normalizePhone("(19) 9812-1569"), "19998121569");
+assert.equal(ip.normalizePhone("1633721569"), "1633721569"); // fixo
+assert.equal(ip.normalizePhone("16 99123-4569"), "16991234569");
+assert.equal(ip.normalizePhone("+55 19 9812-1569"), "19998121569");
+console.log("ok phone");
