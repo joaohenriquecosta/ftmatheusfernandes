@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+import { normalizePhone } from "@/models/infinitepay";
 import * as notify from "@/models/notify";
 import * as orderModel from "@/models/order";
 import * as paymentModel from "@/models/payment";
@@ -49,10 +50,17 @@ export async function POST(
   const customer = {
     name: field("nome"),
     email: field("email"),
-    phone: field("whatsapp")?.replace(/\D/g, ""),
+    phone: normalizePhone(field("whatsapp")),
   };
   if (form && (!customer.name || !customer.email || !customer.phone)) {
     return NextResponse.json({ error: "missing_fields" }, { status: 400 });
+  }
+  // Mesma regra do pattern do form: celular BR com DDD (o 9 é inserido se faltar).
+  if (form && !/^\d{2}9\d{8}$/.test(customer.phone!)) {
+    return NextResponse.redirect(
+      new URL(`/turmas/${slug}/inscricao?erro=whatsapp`, req.url),
+      303,
+    );
   }
 
   const cupomCode = field("cupom");

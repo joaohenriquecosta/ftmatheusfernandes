@@ -80,7 +80,10 @@ export default async function InscricaoPage({
                 inputMode="tel"
                 autoComplete="tel"
                 placeholder="(16) 99999-9999"
-                pattern="[\d\s()+-]{10,20}"
+                pattern={String.raw`(\+?55)?[\s\(]*\d{2}[\s\)]*9[\s.\-]*\d{4}[\s.\-]*\d{4}\s*`}
+                title="Celular com DDD e o 9 na frente, ex.: (16) 99999-9999"
+                hint="Celular com DDD e o 9 na frente, ex.: (16) 99999-9999"
+                aria-invalid={erro === "whatsapp" || undefined}
               />
               <Field
                 label="Cupom (opcional)"
@@ -147,8 +150,9 @@ function Row({
 function Field({
   label,
   name,
+  hint,
   ...rest
-}: { label: string; name: string } & React.InputHTMLAttributes<HTMLInputElement>) {
+}: { label: string; name: string; hint?: string } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <label className="block">
       <span className="mb-2 block text-[10px] font-semibold tracking-[0.28em] text-[#1F4A33] uppercase">
@@ -158,10 +162,21 @@ function Field({
         name={name}
         required
         maxLength={140}
-        className="w-full border-0 border-b border-[#1F4A33]/25 bg-transparent pb-2 text-[17px] text-[#1F4A33] placeholder:text-[#4A524C]/35 focus:border-[#1F4A33] focus:outline-none"
+        id={name}
+        aria-describedby={hint ? `${name}-hint` : undefined}
+        className="peer w-full border-0 border-b border-[#1F4A33]/25 bg-transparent pb-2 text-[17px] text-[#1F4A33] placeholder:text-[#4A524C]/35 focus:border-[#1F4A33] focus:outline-none aria-invalid:border-red-700 [&:user-invalid]:border-red-700"
         style={{ fontFamily: FRAUNCES }}
         {...rest}
       />
+      {hint && (
+        // Aparece só depois que o usuário mexeu no campo e ele ficou inválido (ou se o servidor recusou).
+        <span
+          id={`${name}-hint`}
+          className="mt-2 hidden text-[12px] text-red-700 peer-aria-invalid:block peer-[&:user-invalid]:block"
+        >
+          {hint}
+        </span>
+      )}
     </label>
   );
 }
