@@ -119,10 +119,23 @@ export function getLoteVigente(turma: Turma, now: Date = new Date()): Lote | und
   return turma.lotes.find((l) => new Date(l.endsAt).getTime() > ts);
 }
 
-// Cupom METADE: paga 50% agora (até 31/10), saldo até o início do curso.
-const METADE_ATE = "2026-10-31T23:59:59-03:00";
+// Cupons (secretos, não divulgados na página).
+// - METADE: paga 50% agora (até 31/10), saldo até o início do curso.
+// - INDICACAO: R$100 de desconto (Dry Needling: R$500 → R$400), pagamento integral.
+//   Para quem fez o trabalho de indicação; vale até o início do curso.
+type RegraCupom = {
+  ate?: string;
+  /** Restringe a turmas específicas; ausente = qualquer turma. */
+  turmas?: string[];
+} & ({ metade: true } | { descontoCents: number });
 
-export type Cupom = { code: string; valorCents: number; balanceDueAt: string };
+const CUPONS: Record<string, RegraCupom> = {
+  METADE: { ate: "2026-10-31T23:59:59-03:00", metade: true },
+  INDICACAO: { turmas: ["dry-needling"], descontoCents: 10000 },
+};
+
+/** balanceDueAt presente = pedido é sinal e falta saldo. */
+export type Cupom = { code: string; valorCents: number; balanceDueAt?: string };
 
 /** Retorna o valor a cobrar com o cupom, ou null se inválido/expirado. */
 export function aplicarCupom(
@@ -132,8 +145,14 @@ export function aplicarCupom(
   now: Date = new Date(),
 ): Cupom | null {
   const c = code.trim().toUpperCase();
-  if (c !== "METADE" || now.getTime() > new Date(METADE_ATE).getTime()) return null;
+  const regra = CUPONS[c];
+  if (!regra) return null;
+  if (regra.ate && now.getTime() > new Date(regra.ate).getTime()) return null;
+  if (regra.turmas && !regra.turmas.includes(turma.slug)) return null;
   // ponytail: início do curso = endsAt do último lote; criar campo `inicio` se divergir.
   const inicio = turma.lotes[turma.lotes.length - 1].endsAt;
-  return { code: c, valorCents: Math.ceil(lote.valorCents / 2), balanceDueAt: inicio };
+  if ("metade" in regra) {
+    return { code: c, valorCents: Math.ceil(lote.valorCents / 2), balanceDueAt: inicio };
+  }
+  return { code: c, valorCents: Math.max(0, lote.valorCents - regra.descontoCents) };
 }
