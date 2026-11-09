@@ -72,14 +72,17 @@ export async function POST(
     );
   }
   const amountCents = cupom?.valorCents ?? lote.valorCents;
-  const description = `${turma.nome} · ${lote.nome}${cupom ? " · 50% (sinal)" : ""}`;
+  const sinal = !!cupom?.balanceDueAt;
+  const description = `${turma.nome} · ${lote.nome}${
+    sinal ? " · 50% (sinal)" : cupom ? ` · cupom ${cupom.code}` : ""
+  }`;
 
   const order = await orderModel.create({
     amountCents,
     description,
     context: `turma:${slug}`,
     coupon: cupom?.code,
-    fullAmountCents: cupom ? lote.valorCents : undefined,
+    fullAmountCents: sinal ? lote.valorCents : undefined,
     balanceDueAt: cupom?.balanceDueAt,
     customerName: customer.name,
     customerEmail: customer.email,

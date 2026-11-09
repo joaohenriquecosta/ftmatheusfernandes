@@ -6,6 +6,9 @@ const c = t.aplicarCupom(turma, lote, " metade ", new Date("2026-10-31T23:00:00-
 assert.equal(c.valorCents, 25000); assert.equal(c.balanceDueAt, "2026-11-14T08:00:00-03:00");
 assert.equal(t.aplicarCupom(turma, lote, "METADE", new Date("2026-11-01T00:00:01-03:00")), null);
 assert.equal(t.aplicarCupom(turma, lote, "OUTRO"), null);
+const ind = t.aplicarCupom(turma, lote, "indicacao", new Date("2026-11-10T12:00:00-03:00"))!;
+assert.equal(ind.valorCents, 40000); assert.equal(ind.balanceDueAt, undefined);
+assert.equal(t.aplicarCupom(t.get("uberaba")!, lote, "INDICACAO"), null);
 console.log("ok");
 const o = await import("../models/order.ts");
 const ord = await o.create({ amountCents: 25000, description: "x", fullAmountCents: 50000 });
