@@ -7,10 +7,6 @@ const nextConfig: NextConfig = {
         source: "/proposta",
         destination: "/proposta.html",
       },
-      {
-        source: "/turmas/dry-needling/ebook",
-        destination: "/turmas/dry-needling/ebook.html",
-      },
     ];
   },
 };
