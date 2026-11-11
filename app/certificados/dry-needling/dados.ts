@@ -25,5 +25,11 @@ export const CERTIFICADOS: Certificado[] = [
     "nome": "Paola Cristina Bertoleti",
     "crefito": "3/365972-F",
     "emissao": "2026-11-15"
+  },
+  {
+    "codigo": "DN26-WYYKK",
+    "nome": "Carolina Mathias",
+    "crefito": "3/399772-F",
+    "emissao": "2026-11-15"
   }
 ];
