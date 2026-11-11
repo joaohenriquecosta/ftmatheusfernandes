@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Certificado · Dry Needling</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+  Template de certificado — Curso de Dry Needling (Matheus Fernandes)
+  Parâmetros de URL:
+    nome   = nome completo do aluno
+    id     = código da credencial (ex.: DN-2026-001)
+    modo   = digital (fundo creme, LinkedIn) | print (fundo branco, impressão)
+    crefito= CREFITO do aluno (opcional; ex.: 3/123456-F)
+    url    = link de verificação (gera QR + texto)
+    verso  = 1 para incluir a página do conteúdo programático
+    emissao= data de emissão por extenso (padrão: 15 de novembro de 2026)
+  Assinatura: coloque assinatura.png (fundo transparente) nesta pasta que ela aparece sobre a linha.
+-->
+<style>
+  @page { size: 297mm 210mm; margin: 0; }
+  :root{
+    --verde:#1F4A33; --ambar:#E89B3C; --ambar-claro:#F4C690;
+    --texto:#1A1F1B; --cinza:#4A524C; --papel:#FAF7F1;
+    --serif:"Fraunces", Georgia, serif; --sans:"Inter", system-ui, sans-serif;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ background:#d9d6cf; }
+  body{ font-family:var(--sans); color:var(--texto); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .folha{
+    width:297mm; height:210mm; position:relative; overflow:hidden;
+    background:var(--papel); margin:10mm auto; box-shadow:0 2px 18px rgba(0,0,0,.18);
+    page-break-after:always; break-after:page;
+  }
+  @media print{ html,body{ background:none; } .folha{ margin:0; box-shadow:none; } }
+
+  /* --- textura e moldura (versão digital) --- */
+  .grao{ position:absolute; inset:0; opacity:.05; pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .faixa{ position:absolute; left:0; right:0; top:0; height:2.2mm; background:var(--verde); }
+  .moldura{ position:absolute; inset:9mm; border:0.35mm solid var(--verde); }
+  .moldura::after{ content:""; position:absolute; inset:1.6mm; border:0.2mm solid rgba(31,74,51,.35); }
+  .canto{ position:absolute; width:9mm; height:9mm; border-color:var(--ambar); border-style:solid; border-width:0; }
+  .canto.tl{ top:7mm; left:7mm; border-top-width:.8mm; border-left-width:.8mm; }
+  .canto.tr{ top:7mm; right:7mm; border-top-width:.8mm; border-right-width:.8mm; }
+  .canto.bl{ bottom:7mm; left:7mm; border-bottom-width:.8mm; border-left-width:.8mm; }
+  .canto.br{ bottom:7mm; right:7mm; border-bottom-width:.8mm; border-right-width:.8mm; }
+
+  /* --- versão impressão: papel branco, sem textura, sem nada sangrando até a borda.
+         Tudo fica a ≥ 9 mm do corte → imprime em qualquer impressora/copiadora sem sangria. --- */
+  body.print .folha{ background:#fff; }
+  body.print .grao, body.print .faixa{ display:none; }
+  body.print .moldura{ border-width:.45mm; }
+  body.print .moldura::after{ border-width:.25mm; border-color:rgba(31,74,51,.45); }
+
+  /* --- conteúdo --- */
+  .conteudo{ position:absolute; inset:22mm 26mm 20mm; display:flex; flex-direction:column; }
+  .topo{ display:flex; justify-content:space-between; align-items:flex-start;
+    font-size:7.6pt; letter-spacing:.22em; text-transform:uppercase; color:var(--cinza); }
+  .topo .marca{ font-family:var(--serif); font-size:13pt; letter-spacing:0; text-transform:none; color:var(--verde); }
+  .topo .marca small{ display:block; font-family:var(--sans); font-size:6.8pt; letter-spacing:.22em; text-transform:uppercase; color:var(--cinza); margin-top:1.2mm; }
+  .topo .dir{ text-align:right; line-height:1.7; }
+
+  .titulo{ margin-top:16mm; font-family:var(--serif); font-weight:300; color:var(--verde);
+    font-size:44pt; line-height:.95; letter-spacing:-.015em; }
+  .titulo em{ font-style:italic; color:var(--ambar); font-weight:300; }
+
+  .certificamos{ margin-top:15mm; font-size:8pt; letter-spacing:.24em; text-transform:uppercase; color:var(--cinza); font-weight:500; }
+  .nome{ margin-top:3mm; font-family:var(--serif); font-weight:400; color:var(--texto);
+    font-size:32pt; line-height:1.1; white-space:nowrap; padding-bottom:3mm;
+    border-bottom:.3mm solid var(--ambar); max-width:100%; display:inline-block; }
+  .crefito{ margin-top:2.5mm; font-size:7.6pt; letter-spacing:.22em; text-transform:uppercase; color:var(--cinza); font-weight:500; }
+  .texto{ margin-top:7mm; max-width:215mm; font-size:11.5pt; line-height:1.65; color:#2b322d; }
+  .texto strong{ color:var(--verde); font-weight:600; }
+
+  .rodape{ margin-top:auto; display:grid; grid-template-columns:1.25fr 1fr 1fr; gap:10mm; align-items:end; }
+  .assin{ position:relative; }
+  .assin img{ position:absolute; bottom:6.5mm; left:2mm; height:17mm; }
+  .assin .linha{ border-top:.3mm solid var(--texto); padding-top:2mm; }
+  .assin .quem{ font-family:var(--serif); font-size:12pt; color:var(--verde); }
+  .rotulo{ font-size:6.6pt; letter-spacing:.22em; text-transform:uppercase; color:var(--cinza); font-weight:500; }
+  .valor{ font-size:9pt; color:var(--verde); margin-top:1.4mm; line-height:1.45; }
+  .verif{ display:flex; gap:3.5mm; align-items:flex-end; }
+  .qr{ width:17mm; height:17mm; flex:none; }
+  .qr:empty{ display:none; }
+  .qr svg{ width:100%; height:100%; display:block; }
+  .url{ font-size:6.4pt; color:var(--cinza); margin-top:1.2mm; word-break:break-all; line-height:1.35; }
+  .valor.mono{ font-variant-numeric:tabular-nums; letter-spacing:.04em; font-weight:500; }
+
+  /* agulha decorativa */
+  .agulha{ position:absolute; right:30mm; top:30mm; width:50mm; height:50mm; opacity:.9; }
+  body.print .agulha{ opacity:1; }
+
+  /* --- verso --- */
+  .verso .conteudo{ inset:22mm 26mm 20mm; }
+  .verso h2{ font-family:var(--serif); font-weight:300; font-size:30pt; color:var(--verde); margin-top:14mm; }
+  .verso h2 em{ font-style:italic; color:var(--ambar); }
+  .modulos{ margin-top:12mm; display:grid; grid-template-columns:repeat(3,1fr); gap:11mm; }
+  .mod .num{ font-family:var(--serif); font-style:italic; color:var(--ambar); font-size:20pt; }
+  .mod h3{ font-family:var(--serif); font-weight:400; font-size:14pt; color:var(--verde); margin:1mm 0 4mm; padding-bottom:2.5mm; border-bottom:.25mm solid rgba(31,74,51,.25); }
+  .mod li{ list-style:none; font-size:9.8pt; line-height:1.55; color:#2b322d; padding-left:4.5mm; position:relative; margin-bottom:3mm; }
+  .mod li::before{ content:""; position:absolute; left:0; top:2.5mm; width:1.8mm; height:.3mm; background:var(--ambar); }
+  .verso .rodape{ grid-template-columns:1fr 1fr 1fr; }
+</style>
+</head>
+<body>
+
+<!-- ================= FRENTE ================= -->
+<section class="folha frente">
+  <div class="grao"></div><div class="faixa"></div>
+  <div class="moldura"></div>
+  <i class="canto tl"></i><i class="canto tr"></i><i class="canto bl"></i><i class="canto br"></i>
+
+  <!-- agulha + pontos de dor referida (ornamento) -->
+  <svg class="agulha" viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="50" cy="50" r="34" fill="none" stroke="#1F4A33" stroke-opacity=".18" stroke-width=".5" stroke-dasharray="1.2 2.2"/>
+    <circle cx="50" cy="50" r="22" fill="none" stroke="#1F4A33" stroke-opacity=".28" stroke-width=".5"/>
+    <circle cx="50" cy="50" r="10" fill="#E89B3C" fill-opacity=".16"/>
+    <circle cx="50" cy="50" r="3.2" fill="#E89B3C"/>
+    <line x1="50" y1="50" x2="86" y2="14" stroke="#1F4A33" stroke-width="1" stroke-linecap="round"/>
+    <rect x="80.5" y="9.5" width="12" height="4.2" rx="1" transform="rotate(-45 86.5 11.6)" fill="#1F4A33"/>
+  </svg>
+
+  <div class="conteudo">
+    <div class="topo">
+      <div class="marca">Matheus Fernandes<small>Fisioterapia Esportiva</small></div>
+      <div class="dir">Turma São Carlos · 2026<br>20 horas presenciais</div>
+    </div>
+
+    <h1 class="titulo">Certificado<br><em>de conclusão</em></h1>
+
+    <div class="certificamos">Certificamos que</div>
+    <div><span class="nome" id="nome">Nome Completo do Aluno</span></div>
+    <div class="crefito" id="crefito">CREFITO 3/000000-F</div>
+
+    <p class="texto">
+      concluiu o <strong>Curso de Dry Needling</strong>, com carga horária de <strong>20 horas</strong>
+      presenciais, realizado nos dias 14 e 15 de novembro de 2026, na Clínica Aviven, em São Carlos/SP,
+      abrangendo fundamentos e segurança do agulhamento a seco, avaliação e raciocínio clínico de
+      pontos-gatilho miofasciais e prática supervisionada.
+    </p>
+
+    <div class="rodape">
+      <div class="assin">
+        <img id="assinatura" src="assinatura.png" alt="" onerror="this.remove()">
+        <div class="linha">
+          <div class="quem">Matheus Fernandes</div>
+          <div class="rotulo" style="margin-top:1mm">Fisioterapeuta Esportivo · CREFITO 3/321383-F</div>
+        </div>
+      </div>
+      <div>
+        <div class="rotulo">Emitido em</div>
+        <div class="valor" id="emissao">15 de novembro de 2026</div>
+      </div>
+      <div>
+        <div class="verif">
+          <div id="qr" class="qr"></div>
+          <div>
+            <div class="rotulo">Código da credencial</div>
+            <div class="valor mono" id="cid">DN-2026-000</div>
+            <div class="url" id="url">ftmatheusfernandes.com.br/certificados</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VERSO (conteúdo programático) ================= -->
+<section class="folha verso" id="verso">
+  <div class="grao"></div><div class="faixa"></div>
+  <div class="moldura"></div>
+  <i class="canto tl"></i><i class="canto tr"></i><i class="canto bl"></i><i class="canto br"></i>
+  <div class="conteudo">
+    <div class="topo">
+      <div class="marca">Matheus Fernandes<small>Fisioterapia Esportiva</small></div>
+      <div class="dir">Curso de Dry Needling<br>14 e 15 de novembro de 2026</div>
+    </div>
+    <h2>Conteúdo <em>programático</em></h2>
+    <div class="modulos">
+      <div class="mod"><div class="num">i.</div><h3>Fundamentos e segurança</h3><ul>
+        <li>Fisiopatologia do ponto-gatilho miofascial e dor referida</li>
+        <li>Mecanismos de ação do agulhamento a seco: o que a evidência sustenta</li>
+        <li>Indicações, contraindicações e manejo de intercorrências</li>
+        <li>Biossegurança, descarte e aspectos legais da prática</li></ul></div>
+      <div class="mod"><div class="num">ii.</div><h3>Avaliação e raciocínio clínico</h3><ul>
+        <li>Palpação e identificação de pontos-gatilho ativos e latentes</li>
+        <li>Diagnóstico diferencial: quando agulhar — e quando não</li>
+        <li>Leitura crítica de ensaios clínicos sobre dry needling</li>
+        <li>Integração com terapia manual e exercício</li></ul></div>
+      <div class="mod"><div class="num">iii.</div><h3>Prática supervisionada</h3><ul>
+        <li>Técnicas de inserção e resposta de contração local</li>
+        <li>Músculos com melhor respaldo clínico: cervical, ombro, lombar, quadril e MMII</li>
+        <li>Hands-on em duplas com supervisão individual</li>
+        <li>Dosagem, progressão e reavaliação do paciente</li></ul></div>
+    </div>
+    <div class="rodape">
+      <div><div class="rotulo">Carga horária</div><div class="valor">20 horas presenciais</div></div>
+      <div><div class="rotulo">Local</div><div class="valor">Clínica Aviven · Centro<br>São Carlos/SP</div></div>
+      <div><div class="rotulo">Código da credencial</div><div class="valor mono" id="cid2">DN-2026-000</div></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  const modo = q.get("modo") === "print" ? "print" : "digital";
+  document.body.classList.add(modo);
+  if (q.get("nome")) document.getElementById("nome").textContent = q.get("nome");
+  if (q.get("id")) { document.getElementById("cid").textContent = q.get("id"); document.getElementById("cid2").textContent = q.get("id"); }
+  if (q.has("nome")) { const c = (q.get("crefito") || "").trim(); const el = document.getElementById("crefito"); if (c) el.textContent = "CREFITO " + c.replace(/^crefito\s*/i, ""); else el.remove(); }
+  const url = q.get("url");
+  if (url && window.qrcode) {
+    const qr = qrcode(0, "M"); qr.addData(url); qr.make();
+    document.getElementById("qr").innerHTML = qr.createSvgTag({ margin: 0, scalable: true })
+      .replace(/fill="black"/g, 'fill="#1F4A33"').replace(/fill="white"/g, 'fill="none"');
+    document.getElementById("url").textContent = url.replace(/^https?:\/\//, "");
+  } else document.getElementById("url").remove();
+  if (q.get("emissao")) document.getElementById("emissao").textContent = q.get("emissao");
+  if (q.get("verso") !== "1" && q.has("nome")) document.getElementById("verso").remove();
+
+  // nomes longos: reduz a fonte até caber na largura útil
+  function ajustaNome(){
+    const el = document.getElementById("nome"), max = el.closest(".conteudo").clientWidth;
+    let s = 32; el.style.fontSize = s + "pt";
+    while (el.scrollWidth > max && s > 16) { s -= .5; el.style.fontSize = s + "pt"; }
+  }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { ajustaNome(); document.body.dataset.pronto = "1"; });
+</script>
+</body>
+</html>
