@@ -34,15 +34,31 @@ const { chromium } = require(process.env.PLAYWRIGHT ?? join(homedir(), "dev/hubo
 const CHROME = process.env.CHROME ?? join(homedir(), ".cache/ms-playwright/chromium-1243/chrome-linux64/chrome");
 
 // ---------- CSV ----------
-const linhas = readFileSync(CSV, "utf8").trim().split(/\r?\n/);
+// Cabeçalho fixo: só estas 4 colunas vão para o repo (público). E-mail/telefone ficam no Forms.
+const COLUNAS = ["codigo", "nome", "crefito", "emissao"];
+const linhas = readFileSync(CSV, "utf8").replace(/^\uFEFF/, "").trim().split(/\r?\n/);
 const cab = linhas[0].split(",").map((s) => s.trim());
+if (cab.join(",") !== COLUNAS.join(","))
+  throw new Error(`cabeçalho do CSV deve ser exatamente "${COLUNAS.join(",")}" (separador vírgula), veio "${linhas[0]}"`);
 const alunos = linhas
   .slice(1)
   .filter((l) => l.trim())
-  .map((l) => Object.fromEntries(l.split(",").map((v, i) => [cab[i], v.trim()])));
+  .map((l, n) => {
+    const v = l.split(",");
+    if (v.length !== COLUNAS.length) throw new Error(`linha ${n + 2} tem ${v.length} campos (esperado ${COLUNAS.length}): ${l}`);
+    return Object.fromEntries(v.map((x, i) => [COLUNAS[i], x.trim()]));
+  });
 
 const ALFA = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"; // Crockford: sem I, L, O, U
-const usados = new Set(alunos.map((a) => a.codigo).filter(Boolean));
+for (const a of alunos) {
+  a.codigo = a.codigo.toUpperCase();
+  if (a.codigo && !/^[A-Z0-9-]+$/.test(a.codigo)) throw new Error(`código inválido: ${a.codigo}`);
+}
+const usados = new Set();
+for (const a of alunos) if (a.codigo) {
+  if (usados.has(a.codigo)) throw new Error(`código repetido: ${a.codigo}`);
+  usados.add(a.codigo);
+}
 for (const a of alunos) {
   if (!a.nome) throw new Error("linha sem nome no CSV");
   if (!a.codigo) {
@@ -50,12 +66,11 @@ for (const a of alunos) {
     while (usados.has(a.codigo));
     usados.add(a.codigo);
   }
-  a.codigo = a.codigo.toUpperCase();
   a.emissao ||= "2026-11-15";
   if (!/^\d{4}-\d{2}-\d{2}$/.test(a.emissao)) throw new Error(`emissao inválida: ${a.emissao}`);
   a.crefito = (a.crefito || "").replace(/^crefito\s*/i, "");
 }
-writeFileSync(CSV, [cab.join(","), ...alunos.map((a) => cab.map((c) => a[c] ?? "").join(","))].join("\n") + "\n");
+writeFileSync(CSV, [COLUNAS.join(","), ...alunos.map((a) => COLUNAS.map((c) => a[c] ?? "").join(","))].join("\n") + "\n");
 
 const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
 const porExtenso = (iso) => {
@@ -87,6 +102,8 @@ for (const a of alunos) {
   const abre = async (pg, modo, verso) => {
     await pg.goto(`${template}?${qs}&modo=${modo}&verso=${verso}`, { waitUntil: "networkidle" });
     await pg.waitForSelector("body[data-pronto='1']");
+    if (!(await pg.evaluate(() => !!document.querySelector("#qr svg"))))
+      throw new Error("QR code não foi gerado (CDN do qrcode-generator fora?) — abortando");
   };
 
   await abre(p, "digital", "0");

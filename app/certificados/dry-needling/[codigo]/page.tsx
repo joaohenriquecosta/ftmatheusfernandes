@@ -18,7 +18,8 @@ type Props = { params: Promise<{ codigo: string }> };
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return CERTIFICADOS.map((c) => ({ codigo: c.codigo.toLowerCase() }));
+  // minúsculas (link/QR) e maiúsculas (como o código aparece no LinkedIn); canonical aponta p/ minúsculas
+  return CERTIFICADOS.flatMap((c) => [{ codigo: c.codigo.toLowerCase() }, { codigo: c.codigo.toUpperCase() }]);
 }
 
 function busca(codigo: string): Certificado | undefined {
