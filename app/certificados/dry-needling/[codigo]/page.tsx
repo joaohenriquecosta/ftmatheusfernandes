@@ -160,6 +160,25 @@ export default async function CertificadoPage({ params }: Props) {
             className="h-auto w-full shadow-[0_2px_30px_rgba(31,74,51,0.14)]"
           />
         </a>
+        <h2
+          className="mt-14 mb-5 text-[clamp(24px,3vw,32px)] leading-tight text-[#1F4A33]"
+          style={{ fontFamily: FRAUNCES }}
+        >
+          Conteúdo <em className="text-[#E89B3C]">programático</em>
+        </h2>
+        <a href={`${pasta}/certificado.pdf`} target="_blank" rel="noopener noreferrer" className="block">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`${pasta}/verso.jpg`}
+            srcSet={`${pasta}/verso.jpg 1200w, ${pasta}/verso.png 3508w`}
+            sizes="(min-width: 1100px) 1000px, 100vw"
+            width={1200}
+            height={848}
+            loading="lazy"
+            alt={`Verso do certificado — conteúdo programático do ${CURSO}`}
+            className="h-auto w-full shadow-[0_2px_30px_rgba(31,74,51,0.14)]"
+          />
+        </a>
       </section>
 
       <section className="relative mx-auto max-w-[1100px] px-6 pt-14 pb-10 md:px-12">

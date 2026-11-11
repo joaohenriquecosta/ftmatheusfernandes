@@ -11,13 +11,13 @@ export const CERTIFICADOS: Certificado[] = [
   {
     "codigo": "DN26-BCSDJ",
     "nome": "Victor Pedro Claudino",
-    "crefito": "405512-F",
+    "crefito": "3/405512-F",
     "emissao": "2026-11-15"
   },
   {
     "codigo": "DN26-M0DCZ",
     "nome": "Fernanda Woycick Santiago Pedro Bom",
-    "crefito": "449919-F",
+    "crefito": "3/449919-F",
     "emissao": "2026-11-15"
   },
   {

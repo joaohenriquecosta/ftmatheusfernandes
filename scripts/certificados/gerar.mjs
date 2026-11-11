@@ -8,7 +8,8 @@
 //   emissao — data ISO (padrão 2026-11-15)
 //
 // Saída:
-//   public/certificados/dry-needling/<codigo>/certificado.pdf  (A4 digital, LinkedIn)
+//   public/certificados/dry-needling/<codigo>/certificado.pdf  (A4 digital frente+verso, LinkedIn)
+//   public/certificados/dry-needling/<codigo>/verso.png / verso.jpg (conteúdo programático)
 //   public/certificados/dry-needling/<codigo>/certificado.png  (3508×2480, 300 dpi)
 //   public/certificados/dry-needling/<codigo>/og.jpg           (1200 px, prévia de link)
 //   app/certificados/dry-needling/dados.ts                     (lista usada pelas páginas)
@@ -106,9 +107,12 @@ for (const a of alunos) {
       throw new Error("QR code não foi gerado (CDN do qrcode-generator fora?) — abortando");
   };
 
-  await abre(p, "digital", "0");
+  await abre(p, "digital", "1");
   await p.pdf({ path: join(dir, "certificado.pdf"), preferCSSPageSize: true, printBackground: true });
   await p.locator("section.frente").screenshot({ path: join(dir, "certificado.png") });
+  await p.locator("section.verso").screenshot({ path: join(dir, "verso.png") });
+  await abre(og, "digital", "1");
+  await og.locator("section.verso").screenshot({ path: join(dir, "verso.jpg"), type: "jpeg", quality: 85 });
   await abre(og, "digital", "0");
   await og.locator("section.frente").screenshot({ path: join(dir, "og.jpg"), type: "jpeg", quality: 85 });
   await abre(p, "print", "1");
