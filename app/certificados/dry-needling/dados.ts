@@ -31,5 +31,11 @@ export const CERTIFICADOS: Certificado[] = [
     "nome": "Carolina Mathias",
     "crefito": "3/399772-F",
     "emissao": "2026-11-15"
+  },
+  {
+    "codigo": "DN26-NM3JN",
+    "nome": "Daniel Oishi Mariano",
+    "crefito": "3/451231-F",
+    "emissao": "2026-11-15"
   }
 ];
