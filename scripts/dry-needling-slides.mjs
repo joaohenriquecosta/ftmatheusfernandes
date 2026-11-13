@@ -16,12 +16,63 @@ const pick = (re, what) => {
 };
 const style = pick(/<style>([\s\S]*?)<\/style>/, "<style>");
 const fonts = pick(/(<link rel="preconnect"[\s\S]*?rel="stylesheet">)/, "fontes");
-const body = pick(/<body>([\s\S]*?)<\/body>/, "<body>");
-const total = (body.match(/<section class="s/g) || []).length;
+const rawBody = pick(/<body>([\s\S]*?)<\/body>/, "<body>");
+const total = (rawBody.match(/<section class="s/g) || []).length;
 if (total < 10) throw new Error(`só ${total} slides — fonte errada?`);
+
+// Onde está cada slide no ebook (páginas do PDF Dry-Needling-Manual-do-Curso.pdf,
+// 36 págs, gerado em 09/11/2026 — a numeração impressa é igual à do PDF).
+// [slide, trecho que o slide precisa conter (trava contra slides reordenados), páginas]
+// páginas = null → o assunto não está no ebook.
+const EBOOK = [
+  [2, "Da teoria", "3"], [3, "Escala", "6"], [4, "Dois dias", "10, 17 e 22"], [5, "Fundamentos científicos", "4–9"],
+  [6, "O que é", "4"], [7, "Dois modelos", "4"], [8, "Hipótese integrada", "4"], [9, "Shah", "4"], [10, "Mecanismos", "5"],
+  [11, "Algometria por pressão", null], [12, "PPT", null], [13, "Seis passos", null], [14, "confiável", null],
+  [15, "ativo × latente", null], [16, "O PPT sobe", null], [17, "ficha de registro", null],
+  [18, "Onde a evidência", "9"], [19, "Cervicalgia", "9 e 11"], [20, "Cefaleia", "9, 11, 14 e 24"], [21, "subacromial", "8, 9 e 15"],
+  [22, "epicondilalgia", "9 e 16"], [23, "Lombar", "9 e 20"], [24, "Joelho", "9, 25 e 29"], [25, "temporomandibular", "9 e 23"],
+  [26, "Mapa da", "9"], [27, "Contra", "7"], [28, "Eventos adversos", "7–8"],
+  [29, "Quadrante superior", "10–16"], [30, "Trapézio superior", "10"], [31, "Ativo ou latente", "3–4"],
+  [32, "Trapézio superior", "11"], [33, "Trapézio superior", "11"], [34, "Levantador", "12"], [35, "Levantador", "12"],
+  [36, "Esternocleidomastóideo", "13"], [37, "Esternocleidomastóideo", "13"], [38, "Suboccipitais", "14"], [39, "Suboccipitais", "14"],
+  [40, "Infraespinal", "15"], [41, "Infraespinal", "15"], [42, "Extensores radiais", "16"], [43, "Extensores radiais", "16"],
+  [44, "Coluna lombar", "17–21"], [45, "Multífidos", "17"],
+  [46, "Multífidos", "18"], [47, "Multífidos", "18"], [48, "Quadrado lombar", "19"], [49, "Quadrado lombar", "19"],
+  [50, "Glúteo médio", "20"], [51, "Glúteo médio", "20"], [52, "Glúteo mínimo", "21"], [53, "Glúteo mínimo", "21"],
+  [54, "Quadrante inferior", "22–28"], [55, "Masseter", "22"],
+  [56, "Masseter", "23"], [57, "Masseter", "23"], [58, "Temporal", "24"], [59, "Temporal", "24"],
+  [60, "Reto femoral", "25"], [61, "Reto femoral", "25"], [62, "Poplíteo", "26"], [63, "Poplíteo", "26"],
+  [64, "Gastrocnêmio", "27"], [65, "Gastrocnêmio", "27"], [66, "Sóleo", "28"], [67, "Sóleo", "28"],
+  [68, "O que levar", "32"], [69, "ensaios clínicos", "33–34"], [70, "revisões", "34–35"], [71, "atlas de pontos-gatilho", "35"],
+];
+const plain = s => s.replace(/<style[\s\S]*?<\/style>|<svg[\s\S]*?<\/svg>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
+let n = 0;
+const body = rawBody.replace(/<section class="s[\s\S]*?<\/section>/g, sec => {
+  n++;
+  const e = EBOOK.find(([k]) => k === n);
+  if (!e) return sec;
+  const [, must, pages] = e;
+  if (!plain(sec).toLowerCase().includes(must.toLowerCase()))
+    throw new Error(`slide ${n} não contém "${must}" — os slides mudaram, revise o mapa EBOOK`);
+  if (!sec.includes('<span class="pg"></span>')) throw new Error(`slide ${n} sem rodapé .ft`);
+  const multi = /[–,e]/.test(pages ?? "");
+  const tag = pages
+    ? `<span class="eref" title="Onde está no ebook do curso"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3.5c2-.8 4-.8 6 .6 2-1.4 4-1.4 6-.6V13c-2-.8-4-.8-6 .6-2-1.4-4-1.4-6-.6z M8 4.1v9.5"/></svg>Ebook · ${multi ? "págs." : "pág."} ${pages}</span>`
+    : `<span class="eref none">Só nos slides · não consta no ebook</span>`;
+  return sec.replace('<span class="pg"></span>', `<span class="ft-r">${tag}<span class="pg"></span></span>`);
+});
+if (n !== total) throw new Error("contagem de slides divergente");
+const lastMapped = Math.max(...EBOOK.map(([k]) => k));
+if (lastMapped >= total) throw new Error(`mapa EBOOK vai até o slide ${lastMapped}, mas só há ${total}`);
 
 const player = String.raw`
 <style>
+/* nota de página do ebook no rodapé */
+.ft-r{display:flex;align-items:center;gap:26px}
+.eref{display:inline-flex;align-items:center;gap:7px;padding-right:26px;border-right:1px solid currentColor;border-right-color:rgba(74,82,76,.3)}
+.dark .eref{border-right-color:rgba(244,198,144,.35)}
+.eref svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linejoin:round}
+.eref.none{opacity:.65}
 /* ── player ─────────────────────────────────────────── */
 html,body{height:100%;overflow:hidden}
 body{background:#0E1F16;margin:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
