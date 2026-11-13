@@ -74,12 +74,12 @@ body.clean #bar{opacity:0}
 #ov.on{opacity:1;visibility:visible;transition:opacity .35s ease}
 #ov>.hd{position:fixed;top:0;left:0;right:0;z-index:4;padding:24px 40px 18px;background:linear-gradient(#09140E 70%,rgba(9,20,14,0));color:#F4C690;font:600 12px Inter,Arial,sans-serif;letter-spacing:.3em;text-transform:uppercase}
 #ov .g{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:26px 22px;max-width:1500px;margin:0 auto}
-#ov .t{all:unset;cursor:pointer;position:relative;aspect-ratio:16/9;border-radius:3px;overflow:hidden;outline:1px solid rgba(250,247,241,.08);
+#ov .ovt{all:unset;cursor:pointer;position:relative;aspect-ratio:16/9;border-radius:3px;overflow:hidden;outline:1px solid rgba(250,247,241,.08);
   transition:transform .25s ease,outline-color .25s ease}
-#ov .t:hover,#ov .t:focus-visible{transform:translateY(-3px);outline:2px solid #E89B3C}
-#ov .t.cur{outline:2px solid #F4C690}
-#ov .t .s{position:absolute;left:0;top:0;margin:0;transform-origin:0 0;transform:scale(var(--tk,.18));pointer-events:none}
-#ov .t i{position:absolute;right:8px;bottom:6px;z-index:3;font:italic 300 15px Fraunces,Georgia,serif;color:#FAF7F1;
+#ov .ovt:hover,#ov .ovt:focus-visible{transform:translateY(-3px);outline:2px solid #E89B3C}
+#ov .ovt.cur{outline:2px solid #F4C690}
+#ov .ovt .s{position:absolute;left:0;top:0;margin:0;transform-origin:0 0;transform:scale(var(--tk,.18));pointer-events:none}
+#ov .ovt i{position:absolute;right:8px;bottom:6px;z-index:3;font:italic 300 15px Fraunces,Georgia,serif;color:#FAF7F1;
   background:rgba(9,20,14,.7);padding:1px 8px;border-radius:2px}
 /* tela preta (B) */
 #blk{position:fixed;inset:0;z-index:25;background:#000;opacity:0;pointer-events:none;transition:opacity .5s ease}
@@ -136,7 +136,7 @@ const js = String.raw`
   function fit() {
     const k = Math.min(innerWidth / 1280, innerHeight / 720);
     deck.style.setProperty('--k', k);
-    document.querySelectorAll('#ov .t').forEach(t => t.style.setProperty('--tk', t.clientWidth / 1280));
+    document.querySelectorAll('#ov .ovt').forEach(t => t.style.setProperty('--tk', t.clientWidth / 1280));
   }
 
   function go(n, opts = {}) {
@@ -156,18 +156,18 @@ const js = String.raw`
     $('lbl').textContent = labels[i];
     $('bar').style.width = ((i + 1) / N * 100) + '%';
     if (!opts.noHash) history.replaceState(null, '', '#' + (i + 1));
-    document.querySelectorAll('#ov .t').forEach((t, k) => t.classList.toggle('cur', k === i));
+    document.querySelectorAll('#ov .ovt').forEach((t, k) => t.classList.toggle('cur', k === i));
   }
   const next = () => go(i + 1), prev = () => go(i - 1);
 
   // visão geral (miniaturas montadas na primeira abertura)
   const ov = $('ov');
   function overview(show) {
-    if (show && !ov.querySelector('.t')) {
+    if (show && !ov.querySelector('.ovt')) {
       const g = ov.querySelector('.g');
       S.forEach((s, k) => {
         const b = document.createElement('button');
-        b.className = 't'; b.setAttribute('aria-label', 'Ir para o slide ' + (k + 1));
+        b.className = 'ovt'; b.setAttribute('aria-label', 'Ir para o slide ' + (k + 1));
         const c = s.cloneNode(true);
         c.className = s.className.replace(/\b(on|in|prev|next)\b/g, '').trim();
         c.removeAttribute('style');
@@ -179,14 +179,14 @@ const js = String.raw`
     }
     ov.classList.toggle('on', show);
     ov.setAttribute('aria-hidden', !show);
-    if (show) { fit(); const c = ov.querySelectorAll('.t')[i]; c.classList.add('cur'); c.scrollIntoView({ block: 'center' }); c.focus({ preventScroll: true }); }
+    if (show) { fit(); const c = ov.querySelectorAll('.ovt')[i]; c.classList.add('cur'); c.scrollIntoView({ block: 'center' }); c.focus({ preventScroll: true }); }
   }
   const ovOn = () => ov.classList.contains('on');
 
   function fullscreen() {
     const d = document;
     if (d.fullscreenElement || d.webkitFullscreenElement) (d.exitFullscreen || d.webkitExitFullscreen).call(d);
-    else { const e = d.documentElement; (e.requestFullscreen || e.webkitRequestFullscreen).call(e); }
+    else { const e = d.documentElement, f = e.requestFullscreen || e.webkitRequestFullscreen; if (f) f.call(e); }
   }
 
   // teclado (inclui passadores de slide, que mandam PageUp/PageDown)
@@ -222,13 +222,14 @@ const js = String.raw`
   $('bPrev').onclick = e => { e.stopPropagation(); prev(); };
   $('bNext').onclick = e => { e.stopPropagation(); next(); };
   $('bGrid').onclick = e => { e.stopPropagation(); overview(true); };
+  if (!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) $('bFs').hidden = true;
   $('bFs').onclick = e => { e.stopPropagation(); fullscreen(); };
   $('blk').onclick = () => document.body.classList.remove('black');
 
   // roda/trackpad: um slide por gesto (ignora a inércia)
   let acc = 0, quiet;
   addEventListener('wheel', e => {
-    if (ovOn()) return;
+    if (ovOn() || e.ctrlKey) return;
     e.preventDefault();
     clearTimeout(quiet); quiet = setTimeout(() => { acc = 0; lock = 0; }, 180);
     if (lock) return;
