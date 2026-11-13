@@ -29,8 +29,8 @@ const EBOOK = [
   [6, "O que é", "4"], [7, "Dois modelos", "4"], [8, "Hipótese integrada", "4"], [9, "Shah", "4"], [10, "Mecanismos", "5"],
   [11, "Algometria por pressão", null], [12, "PPT", null], [13, "Seis passos", null], [14, "confiável", null],
   [15, "ativo × latente", null], [16, "O PPT sobe", null], [17, "ficha de registro", null],
-  [18, "Onde a evidência", "9"], [19, "Cervicalgia", "9"], [20, "Cefaleia", "9"], [21, "subacromial", "9"],
-  [22, "epicondilalgia", "9"], [23, "Lombar", "9"], [24, "Joelho", "9"], [25, "temporomandibular", "9"],
+  [18, "Onde a evidência", "9"], [19, "Cervicalgia", "9 e 11"], [20, "Cefaleia", "9, 11, 14 e 24"], [21, "subacromial", "8, 9 e 15"],
+  [22, "epicondilalgia", "9 e 16"], [23, "Lombar", "9 e 20"], [24, "Joelho", "9, 25 e 29"], [25, "temporomandibular", "9 e 23"],
   [26, "Mapa da", "9"], [27, "Contra", "7"], [28, "Eventos adversos", "7–8"],
   [29, "Quadrante superior", "10–16"], [30, "Trapézio superior", "10"], [31, "Ativo ou latente", "3–4"],
   [32, "Trapézio superior", "11"], [33, "Trapézio superior", "11"], [34, "Levantador", "12"], [35, "Levantador", "12"],
@@ -43,7 +43,7 @@ const EBOOK = [
   [56, "Masseter", "23"], [57, "Masseter", "23"], [58, "Temporal", "24"], [59, "Temporal", "24"],
   [60, "Reto femoral", "25"], [61, "Reto femoral", "25"], [62, "Poplíteo", "26"], [63, "Poplíteo", "26"],
   [64, "Gastrocnêmio", "27"], [65, "Gastrocnêmio", "27"], [66, "Sóleo", "28"], [67, "Sóleo", "28"],
-  [68, "O que levar", "32"], [69, "ensaios clínicos", "33–35"], [70, "revisões", "33–35"], [71, "atlas de pontos-gatilho", "35"],
+  [68, "O que levar", "32"], [69, "ensaios clínicos", "33–34"], [70, "revisões", "34–35"], [71, "atlas de pontos-gatilho", "35"],
 ];
 const plain = s => s.replace(/<style[\s\S]*?<\/style>|<svg[\s\S]*?<\/svg>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
 let n = 0;
