@@ -21,7 +21,7 @@ const total = (rawBody.match(/<section class="s/g) || []).length;
 if (total < 10) throw new Error(`só ${total} slides — fonte errada?`);
 
 // Onde está cada slide no ebook (páginas do PDF Dry-Needling-Manual-do-Curso.pdf,
-// 60 págs, revisão de 13/11/2026 — a numeração impressa é igual à do PDF).
+// 61 págs, revisão de 13/11/2026 — a numeração impressa é igual à do PDF).
 // [slide, trecho que o slide precisa conter (trava contra slides reordenados), páginas]
 // Nos músculos: 1º slide → ficha + ponto a ponto; 2º slide → página ponto a ponto.
 // páginas = null → o assunto não está no ebook.
@@ -43,7 +43,7 @@ const EBOOK = [
   [58, "Temporal", "43–44"], [59, "Temporal", "44"], [60, "Reto femoral", "45–46"], [61, "Reto femoral", "46"],
   [62, "Poplíteo", "47–48"], [63, "Poplíteo", "48"], [64, "Gastrocnêmio", "49–50"], [65, "Gastrocnêmio", "50"],
   [66, "Sóleo", "51–52"], [67, "Sóleo", "52"], [68, "O que levar", "56"], [69, "ensaios clínicos", "57–59"],
-  [70, "revisões", "59–60"], [71, "atlas de pontos-gatilho", "60"],
+  [70, "revisões", "59–60"], [71, "auditoria de evidência", "57–60"], [72, "atlas de pontos-gatilho", "60"],
 ];
 const plain = s => s.replace(/<style[\s\S]*?<\/style>|<svg[\s\S]*?<\/svg>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
 let n = 0;
