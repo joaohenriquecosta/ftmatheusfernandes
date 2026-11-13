@@ -31,7 +31,7 @@ const EBOOK = [
   [10, "Mecanismos", "6"], [11, "Algometria por pressão", "10–12"], [12, "PPT", "10"], [13, "Seis passos", "10"],
   [14, "confiável", "11"], [15, "ativo × latente", "11"], [16, "O PPT sobe", "12"], [17, "ficha de registro", "12"],
   [18, "Onde a evidência", "13–16"], [19, "Cervicalgia", "13, 14 e 19"], [20, "Cefaleia", "13, 14, 19, 25 e 43"], [21, "subacromial", "9, 13, 14 e 27"],
-  [22, "epicondilalgia", "13, 15 e 29"], [23, "Lombar", "13, 15 e 36"], [24, "Joelho", "13, 15, 45 e 53"], [25, "temporomandibular", "13, 16 e 41"],
+  [22, "epicondilalgia", "13, 15, 29 e 53"], [23, "Lombar", "13, 15 e 36"], [24, "Joelho", "13, 15, 45 e 53"], [25, "temporomandibular", "13, 16 e 41"],
   [26, "Mapa da", "13"], [27, "O que a literatura diz", "16"], [28, "diretrizes", "16"], [29, "Contra", "8"],
   [30, "Eventos adversos", "8–9"], [31, "Quadrante superior", "18–30"], [32, "Trapézio superior", "18"], [33, "Ativo ou latente", "3 e 17"],
   [34, "Trapézio superior", "19–20"], [35, "Trapézio superior", "20"], [36, "Levantador", "21–22"], [37, "Levantador", "22"],
