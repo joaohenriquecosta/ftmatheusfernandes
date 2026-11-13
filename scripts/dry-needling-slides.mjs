@@ -21,29 +21,29 @@ const total = (rawBody.match(/<section class="s/g) || []).length;
 if (total < 10) throw new Error(`só ${total} slides — fonte errada?`);
 
 // Onde está cada slide no ebook (páginas do PDF Dry-Needling-Manual-do-Curso.pdf,
-// 60 págs, revisão de 13/11/2026 — a numeração impressa é igual à do PDF).
+// 61 págs, revisão de 13/11/2026 — a numeração impressa é igual à do PDF).
 // [slide, trecho que o slide precisa conter (trava contra slides reordenados), páginas]
 // Nos músculos: 1º slide → ficha + ponto a ponto; 2º slide → página ponto a ponto.
 // páginas = null → o assunto não está no ebook.
 const EBOOK = [
-  [2, "Da teoria", "3"], [3, "Escala", "7"], [4, "Dois dias", "3"], [5, "Fundamentos científicos", "5–15"],
+  [2, "Da teoria", "3"], [3, "Escala", "7"], [4, "Dois dias", "3"], [5, "Fundamentos científicos", "5–16"],
   [6, "O que é", "5"], [7, "Dois modelos", "5"], [8, "Hipótese integrada", "5"], [9, "Shah", "6"],
   [10, "Mecanismos", "6"], [11, "Algometria por pressão", "10–12"], [12, "PPT", "10"], [13, "Seis passos", "10"],
   [14, "confiável", "11"], [15, "ativo × latente", "11"], [16, "O PPT sobe", "12"], [17, "ficha de registro", "12"],
-  [18, "Onde a evidência", "13–15"], [19, "Cervicalgia", "13, 14 e 18"], [20, "Cefaleia", "13, 14, 18, 24 e 42"], [21, "subacromial", "9, 13, 14 e 26"],
-  [22, "epicondilalgia", "13, 15 e 28"], [23, "Lombar", "13, 15 e 35"], [24, "Joelho", "13, 15, 44 e 52"], [25, "temporomandibular", "13, 15 e 40"],
-  [26, "Mapa da", "13"], [27, "Contra", "8"], [28, "Eventos adversos", "8–9"], [29, "Quadrante superior", "17–29"],
-  [30, "Trapézio superior", "17"], [31, "Ativo ou latente", "3 e 16"], [32, "Trapézio superior", "18–19"], [33, "Trapézio superior", "19"],
-  [34, "Levantador", "20–21"], [35, "Levantador", "21"], [36, "Esternocleidomastóideo", "22–23"], [37, "Esternocleidomastóideo", "23"],
-  [38, "Suboccipitais", "24–25"], [39, "Suboccipitais", "25"], [40, "Infraespinal", "26–27"], [41, "Infraespinal", "27"],
-  [42, "Extensores radiais", "28–29"], [43, "Extensores radiais", "29"], [44, "Coluna lombar", "30–38"], [45, "Multífidos", "30"],
-  [46, "Multífidos", "31–32"], [47, "Multífidos", "32"], [48, "Quadrado lombar", "33–34"], [49, "Quadrado lombar", "34"],
-  [50, "Glúteo médio", "35–36"], [51, "Glúteo médio", "36"], [52, "Glúteo mínimo", "37–38"], [53, "Glúteo mínimo", "38"],
-  [54, "Quadrante inferior", "39–51"], [55, "Masseter", "39"], [56, "Masseter", "40–41"], [57, "Masseter", "41"],
-  [58, "Temporal", "42–43"], [59, "Temporal", "43"], [60, "Reto femoral", "44–45"], [61, "Reto femoral", "45"],
-  [62, "Poplíteo", "46–47"], [63, "Poplíteo", "47"], [64, "Gastrocnêmio", "48–49"], [65, "Gastrocnêmio", "49"],
-  [66, "Sóleo", "50–51"], [67, "Sóleo", "51"], [68, "O que levar", "55"], [69, "ensaios clínicos", "56–57"],
-  [70, "revisões", "58"], [71, "atlas de pontos-gatilho", "58–59"],
+  [18, "Onde a evidência", "13–16"], [19, "Cervicalgia", "13, 14 e 19"], [20, "Cefaleia", "13, 14, 19, 25 e 43"], [21, "subacromial", "9, 13, 14 e 27"],
+  [22, "epicondilalgia", "13, 15 e 29"], [23, "Lombar", "13, 15 e 36"], [24, "Joelho", "13, 15, 45 e 53"], [25, "temporomandibular", "13, 16 e 41"],
+  [26, "Mapa da", "13"], [27, "Contra", "8"], [28, "Eventos adversos", "8–9"], [29, "Quadrante superior", "18–30"],
+  [30, "Trapézio superior", "18"], [31, "Ativo ou latente", "3 e 17"], [32, "Trapézio superior", "19–20"], [33, "Trapézio superior", "20"],
+  [34, "Levantador", "21–22"], [35, "Levantador", "22"], [36, "Esternocleidomastóideo", "23–24"], [37, "Esternocleidomastóideo", "24"],
+  [38, "Suboccipitais", "25–26"], [39, "Suboccipitais", "26"], [40, "Infraespinal", "27–28"], [41, "Infraespinal", "28"],
+  [42, "Extensores radiais", "29–30"], [43, "Extensores radiais", "30"], [44, "Coluna lombar", "31–39"], [45, "Multífidos", "31"],
+  [46, "Multífidos", "32–33"], [47, "Multífidos", "33"], [48, "Quadrado lombar", "34–35"], [49, "Quadrado lombar", "35"],
+  [50, "Glúteo médio", "36–37"], [51, "Glúteo médio", "37"], [52, "Glúteo mínimo", "38–39"], [53, "Glúteo mínimo", "39"],
+  [54, "Quadrante inferior", "40–52"], [55, "Masseter", "40"], [56, "Masseter", "41–42"], [57, "Masseter", "42"],
+  [58, "Temporal", "43–44"], [59, "Temporal", "44"], [60, "Reto femoral", "45–46"], [61, "Reto femoral", "46"],
+  [62, "Poplíteo", "47–48"], [63, "Poplíteo", "48"], [64, "Gastrocnêmio", "49–50"], [65, "Gastrocnêmio", "50"],
+  [66, "Sóleo", "51–52"], [67, "Sóleo", "52"], [68, "O que levar", "56"], [69, "ensaios clínicos", "57–59"],
+  [70, "revisões", "59–60"], [71, "auditoria de evidência", "57–60"], [72, "atlas de pontos-gatilho", "60"],
 ];
 const plain = s => s.replace(/<style[\s\S]*?<\/style>|<svg[\s\S]*?<\/svg>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
 let n = 0;
