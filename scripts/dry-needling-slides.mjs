@@ -44,7 +44,7 @@ const EBOOK = [
   [62, "Reto femoral", "45–46"], [63, "Reto femoral", "46"], [64, "Poplíteo", "47–48"], [65, "Poplíteo", "48"],
   [66, "Gastrocnêmio", "49–50"], [67, "Gastrocnêmio", "50"], [68, "Sóleo", "51–52"], [69, "Sóleo", "52"],
   [70, "O que levar", "56"], [71, "ensaios clínicos", "57–59"], [72, "revisões", "59–61"], [73, "auditoria de evidência", "57–61"],
-  [74, "estado da arte e diretrizes", "59–61"], [75, "atlas de pontos-gatilho", "61"],
+  [74, "estado da arte e diretrizes", "59–60"], [75, "atlas de pontos-gatilho", "60–61"],
 ];
 const plain = s => s.replace(/<style[\s\S]*?<\/style>|<svg[\s\S]*?<\/svg>/g, "").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
 let n = 0;
