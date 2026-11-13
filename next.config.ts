@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         source: "/turmas/dry-needling/ebook",
         destination: "/turmas/dry-needling/ebook.html",
       },
+      {
+        source: "/turmas/dry-needling/slides",
+        destination: "/turmas/dry-needling/slides.html",
+      },
     ];
   },
 };
