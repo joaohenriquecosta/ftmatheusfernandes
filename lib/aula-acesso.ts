@@ -3,6 +3,7 @@
 
 export const AULA_COOKIE = "aula_dn";
 export const AULA_PATH = "/turmas/dry-needling/aula";
+export const AULA_COOKIE_PATH = "/turmas/dry-needling";
 export const AULA_EXPIRA_MS = 1795489199000; // 23/11/2026 23:59:59 (-03)
 
 async function sha256Hex(s: string) {

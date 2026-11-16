@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { AULA_COOKIE, AULA_EXPIRA_MS, AULA_PATH, aulaToken, iguais } from "@/lib/aula-acesso";
+import { AULA_COOKIE, AULA_COOKIE_PATH, AULA_EXPIRA_MS, AULA_PATH, aulaToken, iguais } from "@/lib/aula-acesso";
 
 export async function POST(request: NextRequest) {
   const form = await request.formData().catch(() => null);
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
   const res = NextResponse.redirect(destino, 303);
   res.cookies.set(AULA_COOKIE, token, {
-    path: AULA_PATH,
+    path: AULA_COOKIE_PATH,
     httpOnly: true,
     secure: true,
     sameSite: "lax",
