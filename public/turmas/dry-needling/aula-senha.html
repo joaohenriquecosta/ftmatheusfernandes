@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0E1F16">
+<title>Dry Needling · Aula de sábado · Matheus Fernandes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--g:#1F4A33;--gd:#0E1F16;--o:#E89B3C;--c:#FAF7F1;--p:#F4C690;--m:#C9CFC6;--w:#E8836B}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--gd);color:var(--c);font-family:Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:520px;margin:0 auto;padding:72px 16px 56px}
+.eb{display:flex;align-items:center;gap:12px;font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--p);margin-bottom:16px}
+.eb::before{content:"";width:28px;height:1px;background:currentColor}
+h1{font-family:Fraunces,Georgia,serif;font-weight:400;font-size:clamp(30px,8vw,44px);letter-spacing:-.02em;line-height:1.04;margin-bottom:12px}
+h1 em{font-style:italic;font-weight:300;color:var(--p)}
+.sub{color:var(--m);font-size:15px;line-height:1.5;margin-bottom:32px}
+form{border-top:3px solid var(--o);background:var(--g);padding:28px 24px}
+label{display:block;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--p);margin-bottom:10px}
+input{width:100%;font:inherit;font-size:17px;color:var(--c);background:transparent;border:0;border-bottom:1px solid rgba(244,198,144,.5);padding:8px 0 10px;outline:none}
+input:focus{border-bottom-color:var(--o)}
+button{margin-top:24px;font:inherit;font-weight:600;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gd);background:var(--o);border:0;padding:14px 22px;cursor:pointer}
+.err{display:none;margin-top:14px;font-size:14px;color:var(--w)}
+.erro .err{display:block}
+.ft{margin-top:20px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--m)}
+.ft a{color:var(--p);text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+  <div class="eb">Curso presencial · Dry Needling</div>
+  <h1>Manhã de <em>sábado</em>, 14/11</h1>
+  <p class="sub">A gravação é restrita. Digite a senha que você recebeu para assistir. Disponível até 23/11/2026.</p>
+  <form method="post" action="/api/aula/entrar">
+    <label for="senha">Senha</label>
+    <input id="senha" name="senha" type="password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" required autofocus>
+    <button type="submit">Assistir</button>
+    <p class="err" role="alert">Senha incorreta. Tente de novo.</p>
+  </form>
+  <p class="ft"><a href="/turmas/dry-needling">Página do curso</a></p>
+</main>
+<script>if (/[?&]erro=1/.test(location.search)) document.body.classList.add('erro');</script>
+</body>
+</html>
