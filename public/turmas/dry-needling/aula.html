@@ -53,13 +53,21 @@ body.expired .off{display:block}
   if (Date.now() > EXPIRA) { document.body.classList.add('expired'); return; }
   var v = document.getElementById('v');
   function off() { document.body.classList.add('expired'); }
+  function down() {
+    document.querySelector('.off p').textContent = 'Não foi possível carregar o vídeo agora.';
+    document.querySelector('.off small').textContent = 'Tente de novo em alguns minutos. Disponível até 23/11/2026.';
+    off();
+  }
   if (window.Hls && Hls.isSupported()) {
-    var h = new Hls({ maxBufferLength: 60 });
+    var h = new Hls({ maxBufferLength: 60 }), tries = 0;
     h.on(Hls.Events.ERROR, function (_, d) {
       if (!d.fatal) return;
-      if (d.response && (d.response.code === 410 || d.response.code === 404)) return off();
-      if (d.type === Hls.ErrorTypes.NETWORK_ERROR) h.startLoad(); else h.recoverMediaError();
+      if (d.response && d.response.code === 410) { h.destroy(); return off(); }
+      if (++tries > 3) { h.destroy(); return down(); }
+      if (d.type === Hls.ErrorTypes.MEDIA_ERROR) h.recoverMediaError();
+      else setTimeout(function () { h.startLoad(); }, 2000 * tries);
     });
+    h.on(Hls.Events.FRAG_LOADED, function () { tries = 0; });
     h.loadSource(SRC); h.attachMedia(v);
   } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = SRC;
