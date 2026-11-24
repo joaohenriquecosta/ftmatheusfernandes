@@ -10,6 +10,8 @@ export async function POST(request: NextRequest) {
 
   const destino = new URL(PLANO_PATH, request.url);
   if (!token || !esperada || !iguais(senha, esperada)) {
+    // Atrasa cada tentativa errada para encarecer chute automático da senha.
+    await new Promise((r) => setTimeout(r, 800));
     destino.searchParams.set("erro", "1");
     return NextResponse.redirect(destino, 303);
   }

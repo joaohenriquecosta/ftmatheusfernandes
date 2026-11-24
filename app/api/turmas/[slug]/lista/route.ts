@@ -12,7 +12,8 @@ export async function POST(
 ) {
   const { slug } = await ctx.params;
   const turma = turmaModel.get(slug);
-  if (!turma || turma.ativa === false) {
+  // Lista de espera só existe no pré-lançamento.
+  if (!turma || turma.ativa === false || turma.vendasAbertas !== false) {
     return NextResponse.json({ error: "turma_not_found" }, { status: 404 });
   }
   const volta = (status: string) => {
@@ -51,7 +52,8 @@ export async function POST(
     perfil,
     origem: field("origem")?.slice(0, 60),
   });
-  await avisar(turma.nome, item);
+  // E-mail repetido: confirma para a pessoa, sem novo aviso.
+  if (item) await avisar(turma.nome, item);
   return volta("ok");
 }
 
@@ -61,7 +63,7 @@ async function avisar(curso: string, x: lista.Interessado) {
   if (!key || to.length === 0) return;
   const esc = (s: string) => s.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" })[c]!);
   try {
-    const total = (await lista.list(x.turma)).length;
+    const total = await lista.count(x.turma);
     await new Resend(key).emails.send({
       from: "Inscrições <inscricoes@ftmatheusfernandes.com.br>",
       to,

@@ -114,11 +114,24 @@ export function FormInscricao(props: {
                 </label>
               </div>
             </fieldset>
-            <Field label="Número de matrícula" name="matricula" autoComplete="off" />
+            <Field
+              label="Número de matrícula"
+              name="matricula"
+              autoComplete="off"
+              pattern=".*\\d.*"
+              title="Informe o número de matrícula"
+            />
           </>
         )}
         {categoria === "profissional" && (
-          <Field label="CREFITO" name="crefito" placeholder="Ex.: 3/123456-F" autoComplete="off" />
+          <Field
+            label="CREFITO"
+            name="crefito"
+            placeholder="Ex.: 3/123456-F"
+            autoComplete="off"
+            pattern={String.raw`(?:\D*\d){4,}\D*`}
+            title="Número do CREFITO, ex.: 3/123456-F"
+          />
         )}
 
         <Field label="Cupom (opcional)" name="cupom" required={false} autoComplete="off" />

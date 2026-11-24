@@ -36,7 +36,9 @@ function ensureSchema(): Promise<unknown> {
       perfil text NOT NULL,
       origem text,
       created_at timestamptz NOT NULL DEFAULT now()
-    )`;
+    )`.then(
+    () => sql`CREATE UNIQUE INDEX IF NOT EXISTS lista_espera_turma_email ON lista_espera (turma, lower(email))`,
+  );
   return g.__ftmf_lista_schema;
 }
 
@@ -52,18 +54,31 @@ const fromRow = (r: Row): Interessado => ({
   createdAt: new Date(r.created_at as string).toISOString(),
 });
 
+/** Grava na lista; devolve undefined se o e-mail já estava na lista desta turma. */
 export async function add(
   input: Omit<Interessado, "id" | "createdAt">,
-): Promise<Interessado> {
+): Promise<Interessado | undefined> {
   const item: Interessado = { ...input, id: randomUUID(), createdAt: new Date().toISOString() };
   if (!sql) {
+    const dup = [...mem.values()].some(
+      (x) => x.turma === item.turma && x.email.toLowerCase() === item.email.toLowerCase(),
+    );
+    if (dup) return undefined;
     mem.set(item.id, item);
     return item;
   }
   await ensureSchema();
-  await sql`INSERT INTO lista_espera (id, turma, nome, email, whatsapp, perfil, origem, created_at)
-    VALUES (${item.id}, ${item.turma}, ${item.nome}, ${item.email}, ${item.whatsapp}, ${item.perfil}, ${item.origem ?? null}, ${item.createdAt})`;
-  return item;
+  const rows = (await sql`INSERT INTO lista_espera (id, turma, nome, email, whatsapp, perfil, origem, created_at)
+    VALUES (${item.id}, ${item.turma}, ${item.nome}, ${item.email}, ${item.whatsapp}, ${item.perfil}, ${item.origem ?? null}, ${item.createdAt})
+    ON CONFLICT DO NOTHING RETURNING id`) as Row[];
+  return rows.length ? item : undefined;
+}
+
+export async function count(turma: string): Promise<number> {
+  if (!sql) return [...mem.values()].filter((x) => x.turma === turma).length;
+  await ensureSchema();
+  const rows = (await sql`SELECT count(*)::int AS n FROM lista_espera WHERE turma = ${turma}`) as Row[];
+  return Number(rows[0]?.n ?? 0);
 }
 
 export async function list(turma: string): Promise<Interessado[]> {

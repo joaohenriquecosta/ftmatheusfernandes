@@ -44,11 +44,12 @@ export function PlanoView({ html }: { html: string }) {
     if (!root) return;
     const novos: Alvo[] = [];
     root.querySelectorAll<HTMLElement>("[data-sec]").forEach((sec) => {
-      let el = sec.querySelector<HTMLElement>(":scope > .coment-slot");
+      const pai = sec.querySelector<HTMLElement>(".wrap") ?? sec;
+      let el = pai.querySelector<HTMLElement>(":scope > .coment-slot");
       if (!el) {
         el = document.createElement("div");
         el.className = "coment-slot";
-        (sec.querySelector(".wrap") ?? sec).appendChild(el);
+        pai.appendChild(el);
       }
       novos.push({
         secao: sec.dataset.sec!,
@@ -60,7 +61,8 @@ export function PlanoView({ html }: { html: string }) {
     const cs: CalcAlvo[] = [];
     root.querySelectorAll<HTMLElement>("[data-calc]").forEach((el) => {
       try {
-        cs.push({ el, config: JSON.parse(el.dataset.calc!) as CalcConfig });
+        const config = JSON.parse(el.dataset.calc!) as CalcConfig;
+        if (config.cenarios?.length) cs.push({ el, config });
       } catch {}
     });
     setCalcs(cs);
