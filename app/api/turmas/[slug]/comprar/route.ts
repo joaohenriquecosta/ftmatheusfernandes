@@ -29,6 +29,14 @@ export async function POST(
     );
   }
 
+  // Pré-lançamento: página no ar só com lista de espera.
+  if (turma.vendasAbertas === false) {
+    return NextResponse.json(
+      { error: "vendas_nao_abertas" },
+      { status: 403 },
+    );
+  }
+
   // Recalcula o lote vigente no momento do clique — defensivo contra cache da
   // página (revalidate=3600). Se o usuário cliquei perto da virada de lote, o
   // valor cobrado é o atual, não o que estava na UI.
@@ -39,6 +47,10 @@ export async function POST(
       { status: 410 },
     );
   }
+
+  const pagina = turmaModel.paginaInscricao(turma);
+  const erro = (codigo: string) =>
+    NextResponse.redirect(new URL(`${pagina}?erro=${codigo}`, req.url), 303);
 
   // Página intermediária (/turmas/[slug]/inscricao) manda nome/email/whats.
   // Botões antigos sem form continuam funcionando (campos vazios).
@@ -57,36 +69,47 @@ export async function POST(
   }
   // Mesma regra do pattern do form: celular BR com DDD (o 9 é inserido se faltar).
   if (form && !/^\d{2}9\d{8}$/.test(customer.phone!)) {
-    return NextResponse.redirect(
-      new URL(`/turmas/${slug}/inscricao?erro=whatsapp`, req.url),
-      303,
-    );
+    return erro("whatsapp");
   }
 
-  const cupomCode = field("cupom");
-  const cupom = cupomCode ? turmaModel.aplicarCupom(turma, lote, cupomCode) : null;
-  if (cupomCode && !cupom) {
-    return NextResponse.redirect(
-      new URL(`/turmas/${slug}/inscricao?erro=cupom`, req.url),
-      303,
-    );
+  // Turmas com categoria: estudante (penúltimo ou último ano, com matrícula)
+  // ou profissional (com CREFITO). O registro fica no pedido para conferência.
+  let categoria: turmaModel.Categoria | undefined;
+  let registro: string | undefined;
+  if (turma.exigeRegistro) {
+    if (!form) return erro("registro");
+    const r = lerRegistro(field);
+    if (!r) return erro("registro");
+    if (field("autorizo") !== "sim") return erro("autorizo");
+    categoria = r.categoria;
+    registro = r.registro;
   }
-  const amountCents = cupom?.valorCents ?? lote.valorCents;
+  const valorCents = turmaModel.valorDoLote(lote, categoria);
+
+  const cupomCode = field("cupom");
+  const cupom = cupomCode
+    ? turmaModel.aplicarCupom(turma, { ...lote, valorCents }, cupomCode)
+    : null;
+  if (cupomCode && !cupom) {
+    return erro("cupom");
+  }
+  const amountCents = cupom?.valorCents ?? valorCents;
   const sinal = !!cupom?.balanceDueAt;
   const description = `${turma.nome} · ${lote.nome}${
-    sinal ? " · 50% (sinal)" : cupom ? ` · cupom ${cupom.code}` : ""
-  }`;
+    categoria ? ` · ${categoria === "estudante" ? "estudante" : "profissional"}` : ""
+  }${sinal ? " · 50% (sinal)" : cupom ? ` · cupom ${cupom.code}` : ""}`;
 
   const order = await orderModel.create({
     amountCents,
     description,
     context: `turma:${slug}`,
     coupon: cupom?.code,
-    fullAmountCents: sinal ? lote.valorCents : undefined,
+    fullAmountCents: sinal ? valorCents : undefined,
     balanceDueAt: cupom?.balanceDueAt,
     customerName: customer.name,
     customerEmail: customer.email,
     customerPhone: customer.phone,
+    registro,
   });
 
   try {
@@ -107,4 +130,32 @@ export async function POST(
       { status: 502 },
     );
   }
+}
+
+const ANOS: Record<string, string> = {
+  penultimo: "penúltimo ano",
+  ultimo: "último ano",
+};
+
+function lerRegistro(
+  field: (k: string) => string | undefined,
+): { categoria: turmaModel.Categoria; registro: string } | null {
+  const categoria = field("categoria");
+  if (categoria === "estudante") {
+    const instituicao = field("instituicao");
+    const ano = ANOS[field("ano") ?? ""];
+    const matricula = field("matricula");
+    if (!instituicao || !ano || !matricula || !/\d/.test(matricula)) return null;
+    return {
+      categoria,
+      registro: `Estudante · ${instituicao} · ${ano} · matrícula ${matricula}`,
+    };
+  }
+  if (categoria === "profissional") {
+    const crefito = field("crefito");
+    // CREFITO tem região e número (ex.: 3/321383-F); aceita formatos variados com ao menos 4 dígitos.
+    if (!crefito || (crefito.match(/\d/g) ?? []).length < 4) return null;
+    return { categoria, registro: `Profissional · CREFITO ${crefito}` };
+  }
+  return null;
 }
