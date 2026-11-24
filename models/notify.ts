@@ -121,6 +121,7 @@ function html(
         <td style="padding:8px 10px">${esc(x.customerEmail)}</td>
         <td style="padding:8px 10px;white-space:nowrap">${esc(x.customerPhone)}</td>
         <td style="padding:8px 10px;white-space:nowrap">${esc(x.paymentMethod)}</td>
+        <td style="padding:8px 10px">${esc(x.registro)}</td>
         <td style="padding:8px 10px;white-space:nowrap">${dt(x.paidAt ?? x.createdAt)}</td>
       </tr>`,
     )
@@ -142,7 +143,7 @@ function html(
       </div>
       <table style="width:100%;border-collapse:collapse;font-size:13px">
         <thead><tr style="text-align:left;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#4A524C;border-bottom:2px solid #1F4A33">
-          <th style="padding:8px 10px">Status</th><th style="padding:8px 10px">Nome</th><th style="padding:8px 10px">E-mail</th><th style="padding:8px 10px">WhatsApp</th><th style="padding:8px 10px">Método</th><th style="padding:8px 10px">Quando</th>
+          <th style="padding:8px 10px">Status</th><th style="padding:8px 10px">Nome</th><th style="padding:8px 10px">E-mail</th><th style="padding:8px 10px">WhatsApp</th><th style="padding:8px 10px">Método</th><th style="padding:8px 10px">Registro</th><th style="padding:8px 10px">Quando</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>

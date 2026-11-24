@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { timingSafeEqual } from "node:crypto";
 import { notFound } from "next/navigation";
 
+import * as lista from "@/models/lista";
 import * as order from "@/models/order";
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default async function InscricoesPage({
   if (!authorized(token)) notFound();
 
   const rows = await order.list(turma ? `turma:${turma}` : undefined);
+  const espera = turma ? await lista.list(turma) : [];
   const paid = rows.filter((o) => o.status === "paid");
   const inscritos = paid.filter((o) => !o.parentId).length;
   const brl = (c: number) =>
@@ -47,7 +49,7 @@ export default async function InscricoesPage({
         <table className="w-full border-collapse text-left">
           <thead>
             <tr className="border-b border-[#1F4A33]/30 text-[10px] tracking-[0.2em] text-[#4A524C] uppercase">
-              {["Criado", "Status", "Nome", "E-mail", "WhatsApp", "Valor", "Saldo", "Método", "Pago em", "Curso", "Pedido"].map((h) => (
+              {["Criado", "Status", "Nome", "E-mail", "WhatsApp", "Valor", "Saldo", "Método", "Pago em", "Registro", "Curso", "Pedido"].map((h) => (
                 <th key={h} className="py-2 pr-4 font-semibold">{h}</th>
               ))}
             </tr>
@@ -70,6 +72,7 @@ export default async function InscricoesPage({
                 </td>
                 <td className="py-2 pr-4">{o.paymentMethod ?? "—"}</td>
                 <td className="py-2 pr-4 whitespace-nowrap">{dt(o.paidAt)}</td>
+                <td className="py-2 pr-4">{o.registro ?? "—"}</td>
                 <td className="py-2 pr-4">{o.context ?? "—"}</td>
                 <td className="py-2 pr-4 text-[10px] text-[#4A524C]">{o.id.slice(0, 8)}</td>
               </tr>
@@ -77,6 +80,38 @@ export default async function InscricoesPage({
           </tbody>
         </table>
       </div>
+      {espera.length > 0 && (
+        <section className="mt-12">
+          <h2 className="mb-1 text-[16px] text-[#1F4A33]">Lista de espera · {espera.length}</h2>
+          <p className="mb-4 text-[#4A524C]">
+            {espera.filter((x) => x.perfil === "estudante").length} estudantes ·{" "}
+            {espera.filter((x) => x.perfil === "profissional").length} profissionais
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left">
+              <thead>
+                <tr className="border-b border-[#1F4A33]/30 text-[10px] tracking-[0.2em] text-[#4A524C] uppercase">
+                  {["Quando", "Nome", "E-mail", "WhatsApp", "Perfil", "Origem"].map((h) => (
+                    <th key={h} className="py-2 pr-4 font-semibold">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {espera.map((x) => (
+                  <tr key={x.id} className="border-b border-[#1F4A33]/10 align-top">
+                    <td className="py-2 pr-4 whitespace-nowrap">{dt(x.createdAt)}</td>
+                    <td className="py-2 pr-4">{x.nome}</td>
+                    <td className="py-2 pr-4">{x.email}</td>
+                    <td className="py-2 pr-4 whitespace-nowrap">{x.whatsapp}</td>
+                    <td className="py-2 pr-4">{x.perfil}</td>
+                    <td className="py-2 pr-4">{x.origem ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
     </main>
   );
 }

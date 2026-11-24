@@ -1,9 +1,14 @@
 export type Lote = {
   nome: string;
   prazo: string;
+  /** Valor cheio (profissional, ou único quando a turma não tem categorias). */
   valorCents: number;
+  /** Valor para estudantes, quando a turma tem categorias. */
+  valorEstudanteCents?: number;
   endsAt: string;
 };
+
+export type Categoria = "estudante" | "profissional";
 
 export type Turma = {
   slug: string;
@@ -20,6 +25,12 @@ export type Turma = {
   cargaHoraria: string;
   vagas: number;
   lotes: Lote[];
+  /** `false` = pré-lançamento: página no ar com lista de espera, checkout fechado. */
+  vendasAbertas?: boolean;
+  /** Pede matrícula (estudante) ou CREFITO (profissional) e cobra por categoria. */
+  exigeRegistro?: boolean;
+  /** Página do formulário de inscrição (padrão: /turmas/<slug>/inscricao). */
+  paginaInscricao?: string;
 };
 
 const TURMAS: Record<string, Turma> = {
@@ -104,6 +115,42 @@ const TURMAS: Record<string, Turma> = {
       },
     ],
   },
+  joelho: {
+    slug: "joelho",
+    nome: "Curso Joelho no Esporte — São Carlos",
+    cidade: "São Carlos",
+    uf: "SP",
+    local: "Local a confirmar",
+    datas: "10 e 11 de Abril de 2027",
+    cargaHoraria: "20h",
+    vagas: 15,
+    vendasAbertas: false,
+    exigeRegistro: true,
+    paginaInscricao: "/joelho/inscricao",
+    lotes: [
+      {
+        nome: "Lote 1",
+        prazo: "até 10 de Janeiro · 23h59",
+        valorCents: 54000,
+        valorEstudanteCents: 39000,
+        endsAt: "2027-01-10T23:59:59-03:00",
+      },
+      {
+        nome: "Lote 2",
+        prazo: "até 28 de Fevereiro · 23h59",
+        valorCents: 62000,
+        valorEstudanteCents: 44000,
+        endsAt: "2027-02-28T23:59:59-03:00",
+      },
+      {
+        nome: "Lote 3",
+        prazo: "até 7 de Abril · 23h59",
+        valorCents: 69000,
+        valorEstudanteCents: 49000,
+        endsAt: "2027-04-07T23:59:59-03:00",
+      },
+    ],
+  },
 };
 
 export function get(slug: string): Turma | undefined {
@@ -112,6 +159,16 @@ export function get(slug: string): Turma | undefined {
 
 export function list(): Turma[] {
   return Object.values(TURMAS);
+}
+
+export function paginaInscricao(turma: Turma): string {
+  return turma.paginaInscricao ?? `/turmas/${turma.slug}/inscricao`;
+}
+
+export function valorDoLote(lote: Lote, categoria?: Categoria): number {
+  return categoria === "estudante" && lote.valorEstudanteCents != null
+    ? lote.valorEstudanteCents
+    : lote.valorCents;
 }
 
 export function getLoteVigente(turma: Turma, now: Date = new Date()): Lote | undefined {
@@ -123,6 +180,8 @@ export function getLoteVigente(turma: Turma, now: Date = new Date()): Lote | und
 // - METADE: paga 50% agora (até 31/10), saldo até o início do curso.
 // - INDICACAO: R$100 de desconto (Dry Needling: R$500 → R$400), pagamento integral.
 //   Para quem fez o trabalho de indicação; vale até o início do curso.
+// - EXALUNO: R$50 de desconto no curso de joelho para quem já fez curso ou mentoria
+//   com o Matheus (conferência manual na lista de inscritos).
 type RegraCupom = {
   ate?: string;
   /** Restringe a turmas específicas; ausente = qualquer turma. */
@@ -132,6 +191,7 @@ type RegraCupom = {
 const CUPONS: Record<string, RegraCupom> = {
   METADE: { ate: "2026-10-31T23:59:59-03:00", metade: true },
   INDICACAO: { turmas: ["dry-needling"], descontoCents: 10000 },
+  EXALUNO: { turmas: ["joelho"], descontoCents: 5000 },
 };
 
 /** balanceDueAt presente = pedido é sinal e falta saldo. */

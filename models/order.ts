@@ -29,6 +29,8 @@ export type Order = {
   balancePaidAt?: string;
   /** Pedido-filho de saldo: aponta pro pedido do sinal. */
   parentId?: string;
+  /** Categoria e registro (ex.: "Estudante · UFSCar · último ano · matrícula 123"). */
+  registro?: string;
 };
 
 // Persistência: Neon Postgres quando DATABASE_URL existe; senão Map em memória
@@ -68,7 +70,8 @@ function ensureSchema(): Promise<unknown> {
       ADD COLUMN IF NOT EXISTS full_amount_cents integer,
       ADD COLUMN IF NOT EXISTS balance_due_at timestamptz,
       ADD COLUMN IF NOT EXISTS balance_paid_at timestamptz,
-      ADD COLUMN IF NOT EXISTS parent_id text`,
+      ADD COLUMN IF NOT EXISTS parent_id text,
+      ADD COLUMN IF NOT EXISTS registro text`,
   );
   return globalForStore.__ftmf_order_schema;
 }
@@ -101,6 +104,7 @@ function fromRow(r: Row): Order {
     balanceDueAt: d(r.balance_due_at),
     balancePaidAt: d(r.balance_paid_at),
     parentId: s(r.parent_id),
+    registro: s(r.registro),
   };
 }
 
@@ -115,6 +119,7 @@ export type CreateOrderInput = {
   fullAmountCents?: number;
   balanceDueAt?: string;
   parentId?: string;
+  registro?: string;
 };
 
 export async function create(input: CreateOrderInput): Promise<Order> {
@@ -132,11 +137,12 @@ export async function create(input: CreateOrderInput): Promise<Order> {
     fullAmountCents: input.fullAmountCents,
     balanceDueAt: input.balanceDueAt,
     parentId: input.parentId,
+    registro: input.registro,
   };
   if (sql) {
     await ensureSchema();
-    await sql`INSERT INTO orders (id, amount_cents, description, status, created_at, customer_name, customer_email, customer_phone, context, coupon, full_amount_cents, balance_due_at, parent_id)
-      VALUES (${order.id}, ${order.amountCents}, ${order.description}, 'pending', ${order.createdAt}, ${order.customerName ?? null}, ${order.customerEmail ?? null}, ${order.customerPhone ?? null}, ${order.context ?? null}, ${order.coupon ?? null}, ${order.fullAmountCents ?? null}, ${order.balanceDueAt ?? null}, ${order.parentId ?? null})`;
+    await sql`INSERT INTO orders (id, amount_cents, description, status, created_at, customer_name, customer_email, customer_phone, context, coupon, full_amount_cents, balance_due_at, parent_id, registro)
+      VALUES (${order.id}, ${order.amountCents}, ${order.description}, 'pending', ${order.createdAt}, ${order.customerName ?? null}, ${order.customerEmail ?? null}, ${order.customerPhone ?? null}, ${order.context ?? null}, ${order.coupon ?? null}, ${order.fullAmountCents ?? null}, ${order.balanceDueAt ?? null}, ${order.parentId ?? null}, ${order.registro ?? null})`;
   } else {
     mem.set(order.id, order);
   }
